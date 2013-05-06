@@ -18,6 +18,11 @@ Query.prototype.page = function (options, callback) {
 
 	options = options || defaults;
 
+	// fix to keep from no max being specified slipping through
+	if (!options.max) {
+		options.max = defaults.max;
+	}
+
 	query.model.count(query._conditions, function (err, total) {
 		query
 			.skip(options.offset)
