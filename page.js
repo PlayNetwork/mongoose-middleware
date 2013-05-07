@@ -10,8 +10,8 @@ Query.prototype.page = function (options, callback) {
 	'use strict';
 
 	var defaults = {
-			offset : 0,
-			max : config.database.maxDocs
+			start : 0,
+			count : config.database.maxDocs
 		},
 		query = this,
 		wrap = {};
@@ -25,8 +25,8 @@ Query.prototype.page = function (options, callback) {
 
 	query.model.count(query._conditions, function (err, total) {
 		query
-			.skip(options.offset)
-			.limit(options.max)
+			.skip(options.start)
+			.limit(options.count)
 			.execFind(function (err, results) {
 				if (err) { return callback(err); }
 
