@@ -25,6 +25,9 @@ Query.prototype.keyword = function (options) {
 	}
 
 	// split the term on any whitespace
+	// var terms = term.match(/\w+|"[^"]+"/g); // splits on spaces except whitespaces within quotes
+	// throws error if " is found in term
+	// TODO: Clean up
 	term = term.replace(/\s+/g, ')(?=.*');
 	pattern = new RegExp('(?=.*' + term + ')', 'i');
 
