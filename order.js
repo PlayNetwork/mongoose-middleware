@@ -9,25 +9,38 @@ Query.prototype.order = function (options) {
 	}
 
 	var
-		key = null,
+		asc = [],
+		desc = [],
 		self = this,
 		sort = options.sort || {},
 		value = null;
 
-	// TODO: Apply sort direction
-	//if (sort.desc) {
-
-	//}
-
-	if (sort.fields instanceof Array) {
-		for (key in sort.fields) {
-			if (sort.fields.hasOwnProperty(key)) {
-				value = sort.fields[key];
-				self.sort(value);
-			}
+	if (sort.desc) {
+		if (!(sort.desc instanceof Array)) {
+			desc.push(sort.desc);
+		} else {
+			desc = sort.desc;
 		}
-	} else {
-		self.sort(sort.fields);
+
+		desc.forEach(function (field) {
+			value = {};
+			value[field] = -1;
+			self.sort(value);
+		});
+	}
+
+	if (sort.asc) {
+		if (!(sort.asc instanceof Array)) {
+			asc.push(sort.asc);
+		} else {
+			asc = sort.asc;
+		}
+
+		asc.forEach(function (field) {
+			value = {};
+			value[field] = 1;
+			self.sort(value);
+		});
 	}
 
 	return self;
