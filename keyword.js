@@ -1,4 +1,32 @@
+/*jslint regexp : true */
+
 var Query = require('mongoose').Query;
+
+
+function getKeywordRegex(term) {
+	'use strict';
+
+	var
+		matches = [],
+		pattern = '';
+
+	// this splits the string at each space except those within double quotes
+	matches = term.match(/\w+|"[^"]+"/g);
+	matches.forEach(function (t) {
+		// remove quotes
+		t = t.replace(/\"/g, '');
+
+		// sanitize for regex (strips everything except letters, numbers, underscores, single quotes and whitespace)
+		t = t.replace(/\W\s/ig, '\\$&');
+
+		// replace spaces with escapes
+		t = t.replace(' ', '\\s');
+
+		pattern += '(?=.*' + t + ')';
+	});
+
+	return pattern;
+}
 
 
 Query.prototype.keyword = function (options) {
@@ -11,31 +39,22 @@ Query.prototype.keyword = function (options) {
 
 	var
 		fields = options.filters.keyword.fields || [],
-		find = {},
-		i = 0,
-		key = null,
+		find = null,
 		or = [],
-		pattern = null,
+		re = null,
 		self = this,
 		term = options.filters.keyword.term || '';
 
-	// ensure search is not empty
 	if (!fields.length || term === '') {
 		return self;
 	}
 
-	// split the term on any whitespace
-	// var terms = term.match(/\w+|"[^"]+"/g); // splits on spaces except whitespaces within quotes
-	// throws error if " is found in term
-	// TODO: Clean up
-	term = term.replace(/\s+/g, ')(?=.*');
-	pattern = new RegExp('(?=.*' + term + ')', 'i');
-
-	for (i = 0; i < fields.length; i++) {
+	re = new RegExp(getKeywordRegex(term), 'i');
+	fields.forEach(function (field) {
 		find = {};
-		find[fields[i]] = pattern;
+		find[field] = re;
 		or.push(find);
-	}
+	});
 
 	self.or(or);
 
