@@ -4,7 +4,7 @@ var Query = require('mongoose').Query;
 function escapeRegex(str) {
 	'use strict';
 
-	return str.replace(/\W/, "\\$1");
+	return str.replace(/\W/, '\\$1');
 }
 
 
