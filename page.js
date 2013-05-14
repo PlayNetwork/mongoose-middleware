@@ -3,7 +3,13 @@
 var
 	Query = require('mongoose').Query,
 
-	config = require('../../config');
+	config = {};
+
+exports.initialize = function (options) {
+	'use strict';
+
+	config = options.config;
+};
 
 
 Query.prototype.page = function (options, callback) {
