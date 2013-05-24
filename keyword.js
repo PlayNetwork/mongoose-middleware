@@ -1,6 +1,10 @@
 /*jslint regexp : true */
 
-var Query = require('mongoose').Query;
+var
+	mongoose = require('mongoose'),
+
+	Query = mongoose.Query,
+	Schema = mongoose.Schema;
 
 
 function getKeywordRegex(term) {
@@ -41,6 +45,8 @@ Query.prototype.keyword = function (options) {
 		fields = options.filters.keyword.fields || [],
 		find = null,
 		or = [],
+		include = null,
+		includes = [],
 		re = null,
 		self = this,
 		term = options.filters.keyword.term || '';
@@ -51,12 +57,31 @@ Query.prototype.keyword = function (options) {
 
 	re = new RegExp(getKeywordRegex(term), 'i');
 	fields.forEach(function (field) {
-		find = {};
-		find[field] = re;
-		or.push(find);
+		// field is an Array; use $in to incorperate keyword for search
+		if (self.model.schema.path(field) && self.model.schema.path(field) instanceof Schema.Types.Array) {
+			find = {};
+			find[field] = {};
+			find[field].$in = [ re ];
+			or.push(find);
+		} else {
+			find = {};
+			find[field] = re;
+			or.push(find);
+		}
 	});
 
 	self.or(or);
+
+	if (includes.length) {
+		includes.forEach(function (include) {
+			var
+				key = include.key,
+				value = include[key];
+
+
+			self.where(key).in(value);
+		});
+	}
 
 	return self;
 };
