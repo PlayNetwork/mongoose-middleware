@@ -34,7 +34,9 @@ Query.prototype.page = function (options, callback) {
 			.skip(options.start)
 			.limit(options.count)
 			.execFind(function (err, results) {
-				if (err) { return callback(err); }
+				if (err) {
+					return callback(err);
+				}
 
 				wrap = {
 					options : options,
