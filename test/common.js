@@ -4,10 +4,10 @@ var
 
 global.requireWithCoverage = function (libName) {
 	if (process.env.MONGOOSE_MIDDLEWARE_COVERAGE) {
-		require('../lib-cov/' + libName + '.js');
+		return require('../lib-cov/' + libName + '.js');
 	}
 
-	require('../lib/' + libName + '.js');
+	return require('../lib/' + libName + '.js');
 };
 
 global.chai = require('chai');
