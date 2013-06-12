@@ -1,0 +1,1 @@
+requireWithCoverage('order');

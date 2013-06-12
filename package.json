@@ -1,0 +1,27 @@
+{
+	"name" : "mongoose-middleware",
+	"description" : "Middleware for mongoose that makes filtering, sorting, pagination and projection chainable and simple to apply",
+	"version" : "0.1.0",
+	"scripts" : {
+		"pretest" : "rm -rf lib-cov ; jshint lib/*.js ; jscoverage lib lib-cov",
+		"test" : "mocha --check-leaks -R spec -r ./test/common.js -u bdd ./test/lib/*.js",
+		"posttest" : "mkdir -p reports ; DEVICE_COVERAGE=1 mocha --check-leaks -R html-cov -r ./test/common.js -u bdd ./test/lib/*.js > reports/coverage.html"
+	},
+	"dependencies": {
+		"mongoose" : "~3.6.11"
+	},
+	"devDependencies" : {
+		"chai" : "*",
+		"jscoverage" : "*",
+		"jshint" : "*",
+		"mocha" : "*"
+	},
+	"repository" : {
+		"type" : "git",
+		"url" : "git@github.com:PlayNetwork/mongoose-middleware.git"
+	},
+	"main" : "index",
+	"engines" : {
+		"node" : "~0.10.3"
+	}
+}
