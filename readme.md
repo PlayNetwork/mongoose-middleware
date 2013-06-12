@@ -58,6 +58,6 @@ findKittehs(opts, function (err, kittehs) {
 	} else {
 		console.log(err);
 	}
-})
+});
 ```
 
