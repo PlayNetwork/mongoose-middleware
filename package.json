@@ -20,7 +20,7 @@
 		"type" : "git",
 		"url" : "git@github.com:PlayNetwork/mongoose-middleware.git"
 	},
-	"main" : "index",
+	"main" : "lib/index",
 	"engines" : {
 		"node" : "~0.10.3"
 	}
