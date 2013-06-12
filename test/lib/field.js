@@ -18,7 +18,15 @@ describe('field', function () {
 		fieldsSelected = [];
 	});
 
-	it ('should only select fields supplied', function () {
+	it ('should return a query when created', function () {
+		var query = kitteh
+			.find()
+			.field(null);
+
+		(query instanceof mongoose.Query).should.equals(true);
+	});
+
+	it ('should only select fields when multiple fields are supplied', function () {
 		var options = {
 			filters : {
 				field : ['birthday', 'name']
@@ -33,10 +41,35 @@ describe('field', function () {
 		fieldsSelected.should.have.length(2);
 	});
 
-	it ('should select all model fields if not supplied', function () {
+	it ('should only select one field when one field is supplied', function () {
+		var options = {
+			filters : {
+				field : ['name']
+			}
+		};
+
+		var query = kitteh
+			.find()
+			.field(options);
+
+		should.exist(query);
+		fieldsSelected.should.have.length(1);
+		fieldsSelected[0].should.equals('name');
+	});
+
+	it ('should select all model fields when options are null', function () {
 		var query = kitteh
 			.find()
 			.field(null);
+
+		should.exist(query);
+		fieldsSelected.should.have.length(0);
+	});
+
+	it ('should select all model fields when options contain filters, but not field', function () {
+		var query = kitteh
+			.find()
+			.field({ filters : {} });
 
 		should.exist(query);
 		fieldsSelected.should.have.length(0);

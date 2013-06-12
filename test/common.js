@@ -11,6 +11,7 @@ global.requireWithCoverage = function (libName) {
 };
 
 global.chai = require('chai');
+global.expect = chai.expect;
 global.kitteh = mongoose.model(
 	'kittehs',
 	new Schema({
