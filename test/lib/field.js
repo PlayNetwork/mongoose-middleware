@@ -57,6 +57,37 @@ describe('field', function () {
 		fieldsSelected[0].should.equals('name');
 	});
 
+	it ('should select one field when one field is supplied and not an array', function () {
+		var options = {
+			filters : {
+				field : 'name'
+			}
+		};
+
+		var query = kitteh
+			.find()
+			.field(options);
+
+		should.exist(query);
+		fieldsSelected.should.have.length(1);
+		fieldsSelected[0].should.equals('name');
+	});
+
+	it ('should select all fields when one field is supplied and not an array but does not exist in schema', function () {
+		var options = {
+			filters : {
+				field : 'notinschema'
+			}
+		};
+
+		var query = kitteh
+			.find()
+			.field(options);
+
+		should.exist(query);
+		fieldsSelected.should.have.length(0);
+	});
+
 	it ('should select all model fields when options are null', function () {
 		var query = kitteh
 			.find()
