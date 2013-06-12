@@ -21,7 +21,8 @@ global.kitteh = mongoose.model(
 			isFurreh : Boolean
 		},
 		home : String,
-		name : String
+		name : String,
+		peePatches : [String]
 	})
 );
 global.should = chai.should();

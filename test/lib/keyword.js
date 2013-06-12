@@ -64,6 +64,25 @@ describe('keyword', function () {
 		orClauseItems[0][0].name.test('spec-cat-acular').should.equals(true);
 	});
 
+	it ('should search matches in arrays when a property within a schema is an array', function () {
+		var options = {
+			filters : {
+				keyword : {
+					fields : ['name', 'peePatches'],
+					term : 'lawn'
+				}
+			}
+		}
+
+		var query = kitteh
+			.find()
+			.keyword(options);
+
+		should.exist(query);
+		orClauseItems[0].should.have.length(2);
+		orClauseItems[0][1].peePatches.$in.should.exist;
+	})
+
 	it ('should search for keyword occurrences with multiple words', function () {
 		var options = {
 			filters : {
