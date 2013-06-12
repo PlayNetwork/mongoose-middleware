@@ -3,6 +3,8 @@ var mongoose = require('mongoose');
 describe('page', function () {
 
 	var
+		countError = null,
+		execError = null,
 		limit = 0,
 		pageLib = null,
 		search = null,
@@ -12,12 +14,12 @@ describe('page', function () {
 		pageLib = requireWithCoverage('page');
 
 		kitteh.count = function (search, countCallback) {
-			countCallback(null, 0);
+			countCallback(countError, 0);
 		};
 
 		mongoose.Query.prototype.execFind = function (findCallback) {
 			search = this._conditions;
-			findCallback(null, []);
+			findCallback(execError, []);
 		};
 
 		mongoose.Query.prototype.limit = function (input) {
@@ -32,6 +34,8 @@ describe('page', function () {
 	});
 
 	beforeEach(function () {
+		countError = null;
+		execError = null;
 		limit = 0;
 		search = null;
 		skip = 0;
@@ -60,6 +64,32 @@ describe('page', function () {
 				data.should.not.be.empty;
 				limit.should.equals(25);
 				skip.should.equals(0);
+
+				done();
+			});
+	});
+
+	it ('should properly return error when one occurs during count', function (done) {
+		countError = new Error('icanhazacounterr');
+
+		kitteh
+			.find()
+			.page(null, function (err, data) {
+				should.exist(err);
+				should.not.exist(data);
+
+				done();
+			});
+	});
+
+	it ('should properly return error when one occurs during exec', function (done) {
+		execError = new Error('icanhazanexecerr');
+
+		kitteh
+			.find()
+			.page(null, function (err, data) {
+				should.exist(err);
+				should.not.exist(data);
 
 				done();
 			});
