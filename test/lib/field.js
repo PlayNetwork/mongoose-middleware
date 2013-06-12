@@ -19,7 +19,7 @@ describe('field', function () {
 	});
 
 	it ('should return a query when created', function () {
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.field(null);
 
@@ -33,7 +33,7 @@ describe('field', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.field(options);
 
@@ -48,7 +48,7 @@ describe('field', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.field(options);
 
@@ -64,7 +64,7 @@ describe('field', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.field(options);
 
@@ -80,7 +80,7 @@ describe('field', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.field(options);
 
@@ -89,7 +89,7 @@ describe('field', function () {
 	});
 
 	it ('should select all model fields when options are null', function () {
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.field(null);
 
@@ -98,7 +98,7 @@ describe('field', function () {
 	});
 
 	it ('should select all model fields when options contain filters, but not field', function () {
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.field({ filters : {} });
 

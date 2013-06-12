@@ -30,7 +30,7 @@ describe('filter', function () {
 	});
 
 	it ('should return a query when created', function () {
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.filter(null);
 
@@ -53,7 +53,7 @@ describe('filter', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.filter(options);
 
@@ -74,7 +74,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = kitteh
+			var query = Kitteh
 				.find()
 				.filter(options);
 
@@ -96,7 +96,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = kitteh
+			var query = Kitteh
 				.find()
 				.filter(options);
 
@@ -118,7 +118,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = kitteh
+			var query = Kitteh
 				.find()
 				.filter(options);
 
@@ -142,7 +142,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = kitteh
+			var query = Kitteh
 				.find()
 				.filter(options);
 
@@ -164,7 +164,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = kitteh
+			var query = Kitteh
 				.find()
 				.filter(options);
 
@@ -186,7 +186,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = kitteh
+			var query = Kitteh
 				.find()
 				.filter(options);
 
@@ -202,20 +202,20 @@ describe('filter', function () {
 				filters : {
 					optional : {
 						exact : {
-							name : ['cat', 'kitteh']
+							name : ['cat', 'Kitteh']
 						}
 					}
 				}
 			};
 
-			var query = kitteh
+			var query = Kitteh
 				.find()
 				.filter(options);
 
 			should.exist(query);
 			orClauseItems.should.have.length(1);
 			orClauseItems[0][0].name.test('cat').should.equals(true);
-			orClauseItems[0][1].name.test('kitteh').should.equals(true);
+			orClauseItems[0][1].name.test('Kitteh').should.equals(true);
 		});
 	});
 });

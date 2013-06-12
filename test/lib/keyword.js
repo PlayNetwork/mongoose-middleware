@@ -19,7 +19,7 @@ describe('keyword', function () {
 	});
 
 	it ('should return a query when created', function () {
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.keyword(null);
 
@@ -36,7 +36,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.keyword(options);
 
@@ -54,7 +54,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.keyword(options);
 
@@ -74,7 +74,7 @@ describe('keyword', function () {
 			}
 		}
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.keyword(options);
 
@@ -93,7 +93,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.keyword(options);
 
@@ -114,7 +114,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.keyword(options);
 

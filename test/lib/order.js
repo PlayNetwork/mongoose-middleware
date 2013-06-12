@@ -19,7 +19,7 @@ describe('order', function () {
 	});
 
 	it ('should return a query when created', function () {
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.order(null);
 
@@ -33,7 +33,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.order(options);
 
@@ -48,7 +48,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.order(options);
 
@@ -64,7 +64,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.order(options);
 
@@ -79,7 +79,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.order(options);
 
@@ -96,7 +96,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = kitteh
+		var query = Kitteh
 			.find()
 			.order(options);
 

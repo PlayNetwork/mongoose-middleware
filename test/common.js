@@ -12,7 +12,7 @@ global.requireWithCoverage = function (libName) {
 
 global.chai = require('chai');
 global.expect = chai.expect;
-global.kitteh = mongoose.model(
+global.Kitteh = mongoose.model(
 	'kittehs',
 	new Schema({
 		birthday : { type : Date, default : Date.now },

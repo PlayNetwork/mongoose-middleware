@@ -8,13 +8,14 @@ describe('page', function () {
 		limit = 0,
 		pageLib = null,
 		search = null,
-		skip = 0;
+		skip = 0,
+		total = 1000;
 
 	before(function () {
 		pageLib = requireWithCoverage('page');
 
-		kitteh.count = function (search, countCallback) {
-			countCallback(countError, 0);
+		Kitteh.count = function (search, countCallback) {
+			countCallback(countError, total);
 		};
 
 		mongoose.Query.prototype.execFind = function (findCallback) {
@@ -42,12 +43,11 @@ describe('page', function () {
 	});
 
 	it ('should pass search information to page', function (done) {
-		kitteh
+		Kitteh
 			.find()
 			.page(null, function (err, data) {
 				should.not.exist(err);
 				data.should.not.be.empty;
-				limit.should.equals(-1);
 				skip.should.equals(0);
 
 				done();
@@ -57,7 +57,7 @@ describe('page', function () {
 	it ('should default limit to maxDocs when specified at initialization', function (done) {
 		pageLib.initialize({ maxDocs: 25 });
 
-		kitteh
+		Kitteh
 			.find()
 			.page(null, function (err, data) {
 				should.not.exist(err);
@@ -72,7 +72,7 @@ describe('page', function () {
 	it ('should properly return error when one occurs during count', function (done) {
 		countError = new Error('icanhazacounterr');
 
-		kitteh
+		Kitteh
 			.find()
 			.page(null, function (err, data) {
 				should.exist(err);
@@ -85,11 +85,32 @@ describe('page', function () {
 	it ('should properly return error when one occurs during exec', function (done) {
 		execError = new Error('icanhazanexecerr');
 
-		kitteh
+		Kitteh
 			.find()
 			.page(null, function (err, data) {
 				should.exist(err);
 				should.not.exist(data);
+
+				done();
+			});
+	});
+
+	it ('should properly wrap the return data with input options', function (done) {
+		var options = {
+			start : 0,
+			count : 50
+		};
+
+		Kitteh
+			.find()
+			.page(options, function (err, data) {
+				should.not.exist(err);
+				should.exist(data);
+
+				data.options.start.should.equals(0);
+				data.options.count.should.equals(50);
+				data.results.should.be.empty;
+				data.total.should.equals(total);
 
 				done();
 			});
