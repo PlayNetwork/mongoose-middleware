@@ -21,7 +21,7 @@ describe('keyword', function () {
 	it ('should return a query when created', function () {
 		var query = kitteh
 			.find()
-			.field(null);
+			.keyword(null);
 
 		(query instanceof mongoose.Query).should.equals(true);
 	});

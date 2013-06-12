@@ -196,5 +196,26 @@ describe('filter', function () {
 			orClauseItems[0][0].name.test('cat litter').should.equals(false);
 			orClauseItems[0][0].name.test('the cat').should.equals(false);
 		});
+
+		it ('should look for multiple occurrences of a match when supplying an array', function () {
+			var options = {
+				filters : {
+					optional : {
+						exact : {
+							name : ['cat', 'kitteh']
+						}
+					}
+				}
+			};
+
+			var query = kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			orClauseItems.should.have.length(1);
+			orClauseItems[0][0].name.test('cat').should.equals(true);
+			orClauseItems[0][1].name.test('kitteh').should.equals(true);
+		});
 	});
 });
