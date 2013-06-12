@@ -29,6 +29,39 @@ describe('filter', function () {
 		whereClause = {};
 	});
 
+	it ('should return a query when created', function () {
+		var query = kitteh
+			.find()
+			.filter(null);
+
+		(query instanceof mongoose.Query).should.equals(true);
+	});
+
+	it ('should apply both mandatory and optional filters when both are supplied', function () {
+		var options = {
+			filters : {
+				mandatory : {
+					contains : {
+						name : 'cat'
+					}
+				},
+				optional : {
+					exact : {
+						'features.color' : 'brindle'
+					}
+				}
+			}
+		};
+
+		var query = kitteh
+			.find()
+			.filter(options);
+
+		should.exist(query);
+		should.exist(whereClause.name);
+		orClauseItems.should.have.length(1);
+	});
+
 	describe('mandatory filters', function () {
 		it ('should look for occurrences of a term within a string using contains', function () {
 			var options = {
@@ -115,6 +148,9 @@ describe('filter', function () {
 
 			should.exist(query);
 			orClauseItems.should.have.length(1);
+			orClauseItems[0][0].name.test('cat').should.equals(true);
+			orClauseItems[0][0].name.test('a cat exists').should.equals(true);
+			orClauseItems[0][0].name.test('dog').should.equals(false);
 		});
 
 		it ('should look for occurrences of a term at the start of a string using startsWith', function () {
@@ -134,6 +170,9 @@ describe('filter', function () {
 
 			should.exist(query);
 			orClauseItems.should.have.length(1);
+			orClauseItems[0][0].name.test('cat').should.equals(true);
+			orClauseItems[0][0].name.test('cat exists').should.equals(true);
+			orClauseItems[0][0].name.test('this cat is sick').should.equals(false);
 		});
 
 		it ('should look for occurrences of an exact match of the term when using exact', function () {
@@ -153,6 +192,9 @@ describe('filter', function () {
 
 			should.exist(query);
 			orClauseItems.should.have.length(1);
+			orClauseItems[0][0].name.test('cat').should.equals(true);
+			orClauseItems[0][0].name.test('cat litter').should.equals(false);
+			orClauseItems[0][0].name.test('the cat').should.equals(false);
 		});
 	});
 });

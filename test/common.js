@@ -16,7 +16,7 @@ global.kitteh = mongoose.model(
 	'kittehs',
 	new Schema({
 		birthday : { type : Date, default : Date.now },
-		description : {
+		features : {
 			color : String,
 			isFurreh : Boolean
 		},
