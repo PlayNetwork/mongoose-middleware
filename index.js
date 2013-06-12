@@ -7,6 +7,6 @@ var
 
 module.exports.initialize = function (options) {
 	if (options && options.maxResults) {
-		page.initialize(options.maxResults);
+		page.initialize(options);
 	}
 };
