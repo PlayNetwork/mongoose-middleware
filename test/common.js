@@ -20,6 +20,7 @@ global.kitteh = mongoose.model(
 			color : String,
 			isFurreh : Boolean
 		},
+		home : String,
 		name : String
 	})
 );
