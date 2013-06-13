@@ -160,7 +160,7 @@ mongooseMiddleware.initialize({
 
 ### Projection (Field Filters)
 
-In order specific specific fields from a document in Mongo to be returned, the fields filter may be used.
+In order specify specific fields from a document in Mongo to be returned, the fields filter may be used.
 
 ```Javascript
 
