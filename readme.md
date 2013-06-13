@@ -1,5 +1,7 @@
 # Mongoose Middleware
 
+[![Build Status](https://secure.travis-ci.org/brozeph/mongoose-middleware.png?branch=master)](http://travis-ci.org/brozeph/mongoose-middleware?branch=master)
+
 ## Features
 
 * Pagination (start, count and total matching)
