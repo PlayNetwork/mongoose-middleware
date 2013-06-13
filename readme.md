@@ -1,5 +1,7 @@
 # Mongoose Middleware
 
+[![Build Status](https://secure.travis-ci.org/PlayNetwork/mongoose-middleware.png?branch=master)](http://travis-ci.org/PlayNetwork/mongoose-middleware?branch=master) [![Coverage Status](https://coveralls.io/repos/PlayNetwork/mongoose-middleware/badge.png)](https://coveralls.io/r/PlayNetwork/mongoose-middleware)
+
 ## Features
 
 * Pagination (start, count and total matching)
@@ -158,7 +160,7 @@ mongooseMiddleware.initialize({
 
 ### Projection (Field Filters)
 
-In order specific specific fields from a document in Mongo to be returned, the fields filter may be used.
+In order specify specific fields from a document in Mongo to be returned, the fields filter may be used.
 
 ```Javascript
 
