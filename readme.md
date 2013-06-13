@@ -13,7 +13,7 @@
 npm install mongoose-middleware
 ```
 
-Then, simply require the library where you are using Mongoose to query Mongo as follows:
+Then, simply require the library *after* the `require('mongoose')` statement as follows:
 
 ```Javascript
 var
@@ -29,8 +29,8 @@ var
 	mongooseMiddleware = require('mongoose-middleware');
 
 	mongooseMiddleware.initialize({
-			maxDocs : 1000
-		});
+		maxDocs : 1000
+	});
 ```
 
 
@@ -44,7 +44,7 @@ The following example shows usage of field projections, mandatory and optional s
 var
 	mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	Kitteh = mongoose.model(
+	KittehModel = mongoose.model(
 		'kittehs',
 		new Schema({
 			birthday : { type : Date, default : Date.now },
@@ -88,7 +88,7 @@ var options = {
 	count : 500
 };
 
-Kitteh
+KittehModel
 	.find()
 	.field(options)
 	.keyword(options)
@@ -152,8 +152,8 @@ var
 	mongooseMiddleware = require('mongoose-middleware');
 
 	mongooseMiddleware.initialize({
-			maxDocs : 1000
-		});
+		maxDocs : 1000
+	});
 ```
 
 ### Projection (Field Filters)
@@ -164,11 +164,11 @@ In order specific specific fields from a document in Mongo to be returned, the f
 
 var options = {
 	filters : {
-		field : ['firstName', 'lastName', 'qualities.demeanor']
+		field : ['name', 'home', 'qualities.demeanor']
 	}
 };
 
-MyModel
+KittehModel
 	.find()
 	.field(options)
 	.execFind(function (err, results) {
@@ -180,7 +180,7 @@ MyModel
 Alternatively, a single field can be specified (not in an array):
 
 ```Javascript
-MyModel
+KittehModel
 	.find()
 	.field({ filters : { field : '_id' } })
 	.execFind(callback);
@@ -260,8 +260,127 @@ var options = {
 
 ### Sorting
 
+Sorting, at this point, is fairly basic. All descending sorts will be applied prior to ascending sorts when specifying multiple sorts of each direction.
+
+#### Descending
+
+```Javascript
+var options = {
+	sort : {
+		desc : ['name', 'description', 'knownAliases']
+	}
+};
+
+KittehModel
+	.find()
+	.order(options)
+	.execFind(function (err, results) {
+		// work with response...
+	});
+```
+
+You may also specify a single field (not an array) for both descending and ascending sorts:
+
+```Javascript
+var options = {
+	sort : {
+		desc : 'birthday'
+	}
+};
+```
+
+#### Ascending
+
+```Javascript
+var options = {
+	sort : {
+		asc : ['name', 'description', 'knownAliases']
+	}
+};
+
+KittehModel
+	.find()
+	.order(options)
+	.execFind(function (err, results) {
+		// work with response...
+	});
+```
+
+You may also specify ascending and descending sorts together:
+
+```Javascript
+var options = {
+	sort : {
+		asc : 'name'
+		desc : ['birthday', 'home']
+	}
+};
+```
+
 ### Pagination
+
+Pagination is performed by swapping the `exec()` or `execFind()` function of Mongoose with `page()`. Pagination may be specified as follows:
+
+```Javascript
+var options = {
+	start : 0,
+	count : 100
+};
+
+KittehModel
+	.find()
+	.page(options, function (err, results) {
+		// work with response...
+	});
+```
+
+When using pagination, maxDocs may specified via the `initialize()` function of the library which will result in no more than that maximum number of documents being returned.
+
+```Javascript
+var
+	mongoose = require('mongoose'),
+	mongooseMiddleware = require('mongoose-middleware'),
+	KittehModel = require('./models/kitteh');
+
+var options = {
+	start : 0,
+	count : 100
+};
+
+mongooseMiddleware.initialize({ maxDocs : 50 });
+
+KittehModel
+	.find()
+	.page(options, function (err, results) {
+		// results.options.count === 50
+	});
+```
+
+*Please note*: While the maxDocs will limit the number of returned documents, it will not affect the total count value of matching documents.
+
+#### Response
+
+Pagination returns the specified start, count and overall total numer of matching documents as a wrapper to the results from Mongo.
+
+```Javascript
+{
+	options : {
+		count : 50,
+		start : 0
+	},
+	results : [ ... ],
+	total : 734
+}
+```
 
 ## License
 
-MIT, see LICENSE.txt
+MIT Style
+
+```text
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```

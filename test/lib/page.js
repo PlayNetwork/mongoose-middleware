@@ -42,7 +42,7 @@ describe('page', function () {
 		skip = 0;
 	});
 
-	it ('should pass search information to page', function (done) {
+	it('should pass search information to page', function (done) {
 		Kitteh
 			.find()
 			.page(null, function (err, data) {
@@ -54,7 +54,7 @@ describe('page', function () {
 			});
 	});
 
-	it ('should default limit to maxDocs when specified at initialization', function (done) {
+	it('should default limit to maxDocs when specified at initialization', function (done) {
 		pageLib.initialize({ maxDocs: 25 });
 
 		Kitteh
@@ -69,7 +69,7 @@ describe('page', function () {
 			});
 	});
 
-	it ('should properly return error when one occurs during count', function (done) {
+	it('should properly return error when one occurs during count', function (done) {
 		countError = new Error('icanhazacounterr');
 
 		Kitteh
@@ -82,7 +82,7 @@ describe('page', function () {
 			});
 	});
 
-	it ('should properly return error when one occurs during exec', function (done) {
+	it('should properly return error when one occurs during exec', function (done) {
 		execError = new Error('icanhazanexecerr');
 
 		Kitteh
@@ -95,11 +95,13 @@ describe('page', function () {
 			});
 	});
 
-	it ('should properly wrap the return data with input options', function (done) {
+	it('should properly wrap the return data with input options', function (done) {
 		var options = {
 			start : 0,
 			count : 50
 		};
+
+		pageLib.initialize({ maxDocs : -1 });
 
 		Kitteh
 			.find()
@@ -111,6 +113,26 @@ describe('page', function () {
 				data.options.count.should.equals(50);
 				data.results.should.be.empty;
 				data.total.should.equals(total);
+
+				done();
+			});
+	});
+
+	it('should not allow more than the maxDocs to be returned from a page request', function (done) {
+		var options = {
+			start : 0,
+			count : 100
+		};
+
+		pageLib.initialize({ maxDocs: 50 });
+
+		Kitteh
+			.find()
+			.page(options, function (err, data) {
+				should.not.exist(err);
+				should.exist(data);
+
+				data.options.count.should.equals(50);
 
 				done();
 			});
