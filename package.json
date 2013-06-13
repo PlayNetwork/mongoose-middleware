@@ -1,7 +1,7 @@
 {
 	"name" : "mongoose-middleware",
 	"description" : "Middleware for mongoose that makes filtering, sorting, pagination and projection chainable and simple to apply",
-	"version" : "0.1.1",
+	"version" : "0.1.2",
 	"scripts" : {
 		"pretest" : "rm -rf lib-cov ; jshint lib/*.js ; jscoverage lib lib-cov",
 		"test" : "mocha --check-leaks -R spec -r ./test/common.js -u bdd ./test/lib/*.js",
@@ -25,6 +25,6 @@
 	},
 	"main" : "lib",
 	"engines" : {
-		"node" : "~0.10.3"
+		"node" : ">=0.10.0"
 	}
 }
