@@ -1,11 +1,9 @@
-var mongoose = require('mongoose');
-
 describe('order', function () {
 
 	var sortClauseItems = [];
 
 	before(function () {
-		requireWithCoverage('order');
+		requireWithCoverage('order')(mongoose);
 
 		mongoose.Query.prototype.sort = function (clause) {
 			if (clause) {

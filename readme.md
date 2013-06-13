@@ -15,24 +15,22 @@
 npm install mongoose-middleware
 ```
 
-Then, simply require the library *after* the `require('mongoose')` statement as follows:
+Then, simply require the library and pass in the instance of the `require('mongoose')` statement to the initialize method as follows:
 
 ```Javascript
-var
-	mongoose = require('mongoose'),
-	mongooseMiddleware = require('mongoose-middleware');
+var mongoose = require('mongoose');
+
+require('mongoose-middleware').initialize(mongoose);
 ```
 
 Optionally configure max documents for pagination:
 
 ```Javascript
-var
-	mongoose = require('mongoose'),
-	mongooseMiddleware = require('mongoose-middleware');
+var mongoose = require('mongoose');
 
-mongooseMiddleware.initialize({
-	maxDocs : 1000
-});
+require('mongoose-middleware').initialize({
+		maxDocs : 1000
+	}, mongoose);
 ```
 
 
@@ -59,6 +57,8 @@ var
 			peePatches : [String]
 		})
 	);
+
+require('mongoose-middleware').initialize(mongoose);
 
 /*
 	Retrieve the name, home and features.color of kittehs that live in Seattle,
@@ -149,13 +149,10 @@ The options submitted to the `page(options, callback)` middleware method are ech
 The maxDocs property may optionally be specified on initialize to ensure no more than the specified number of documents are ever returned from a query. Please note that this does not affect the ability for the component to return the correct total count of results when using the pagination middleware function.
 
 ```Javascript
-var
-	mongoose = require('mongoose'),
-	mongooseMiddleware = require('mongoose-middleware');
-
-mongooseMiddleware.initialize({
-	maxDocs : 1000
-});
+var mongoose = require('mongoose'),
+require('mongoose-middleware').initialize({
+		maxDocs : 1000
+	}, mongoose);
 ```
 
 ### Projection (Field Filters)
@@ -341,15 +338,14 @@ When using pagination, maxDocs may specified via the `initialize()` function of 
 ```Javascript
 var
 	mongoose = require('mongoose'),
-	mongooseMiddleware = require('mongoose-middleware'),
 	KittehModel = require('./models/kitteh');
+
+require('mongoose-middleware').initialize({ maxDocs : 50 }, mongoose);
 
 var options = {
 	start : 0,
 	count : 100
 };
-
-mongooseMiddleware.initialize({ maxDocs : 50 });
 
 KittehModel
 	.find()

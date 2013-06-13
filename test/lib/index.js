@@ -1,5 +1,3 @@
-var mongoose = require('mongoose');
-
 describe('index', function () {
 
 	var
@@ -11,6 +9,7 @@ describe('index', function () {
 
 	before(function () {
 		indexLib = requireWithCoverage('index');
+		indexLib.initialize(mongoose);
 
 		Kitteh.count = function (search, countCallback) {
 			countCallback(null, 0);
@@ -67,7 +66,7 @@ describe('index', function () {
 			maxDocs : 1000
 		};
 
-		indexLib.initialize(options);
+		indexLib.initialize(options, mongoose);
 
 		Kitteh
 			.find()
