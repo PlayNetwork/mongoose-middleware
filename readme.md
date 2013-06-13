@@ -28,9 +28,9 @@ var
 	mongoose = require('mongoose'),
 	mongooseMiddleware = require('mongoose-middleware');
 
-	mongooseMiddleware.initialize({
-		maxDocs : 1000
-	});
+mongooseMiddleware.initialize({
+	maxDocs : 1000
+});
 ```
 
 
@@ -151,9 +151,9 @@ var
 	mongoose = require('mongoose'),
 	mongooseMiddleware = require('mongoose-middleware');
 
-	mongooseMiddleware.initialize({
-		maxDocs : 1000
-	});
+mongooseMiddleware.initialize({
+	maxDocs : 1000
+});
 ```
 
 ### Projection (Field Filters)
