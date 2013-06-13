@@ -1,6 +1,6 @@
 # Mongoose Middleware
 
-[![Build Status](https://secure.travis-ci.org/brozeph/mongoose-middleware.png?branch=master)](http://travis-ci.org/brozeph/mongoose-middleware?branch=master)
+[![Build Status](https://secure.travis-ci.org/PlayNetwork/mongoose-middleware.png?branch=master)](http://travis-ci.org/PlayNetwork/mongoose-middleware?branch=master)
 
 ## Features
 
