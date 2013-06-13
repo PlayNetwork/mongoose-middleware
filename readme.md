@@ -1,6 +1,6 @@
 # Mongoose Middleware
 
-[![Build Status](https://secure.travis-ci.org/PlayNetwork/mongoose-middleware.png?branch=master)](http://travis-ci.org/PlayNetwork/mongoose-middleware?branch=master)
+[![Build Status](https://secure.travis-ci.org/PlayNetwork/mongoose-middleware.png?branch=master)](http://travis-ci.org/PlayNetwork/mongoose-middleware?branch=master) [![Coverage Status](https://coveralls.io/repos/PlayNetwork/mongoose-middleware/badge.png)](https://coveralls.io/r/PlayNetwork/mongoose-middleware)
 
 ## Features
 

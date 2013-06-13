@@ -5,16 +5,18 @@
 	"scripts" : {
 		"pretest" : "rm -rf lib-cov ; jshint lib/*.js ; jscoverage lib lib-cov",
 		"test" : "mocha --check-leaks -R spec -r ./test/common.js -u bdd ./test/lib/*.js",
-		"posttest" : "rm -rf reports ; mkdir -p reports ; MONGOOSE_MIDDLEWARE_COVERAGE=true mocha --check-leaks -R html-cov -r ./test/common.js -u bdd ./test/lib/*.js > reports/coverage.html ; exit 0"
+		"posttest" : "rm -rf reports ; mkdir -p reports ; MONGOOSE_MIDDLEWARE_COVERAGE=true mocha --check-leaks -R mocha-lcov-reporter -r ./test/common.js -u bdd ./test/lib/*.js | ./node_modules/coveralls/bin/coveralls.js"
 	},
 	"dependencies": {
 		"mongoose" : "~3.6.11"
 	},
 	"devDependencies" : {
 		"chai" : "*",
+		"coveralls" : "*",
 		"jscoverage" : "*",
 		"jshint" : "*",
-		"mocha" : "*"
+		"mocha" : "*",
+		"mocha-lcov-reporter" : "*"
 	},
 	"repository" : {
 		"type" : "git",
