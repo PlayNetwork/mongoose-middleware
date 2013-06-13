@@ -1,5 +1,3 @@
-var mongoose = require('mongoose');
-
 describe('filter', function () {
 
 	var
@@ -7,7 +5,7 @@ describe('filter', function () {
 		whereClause = {};
 
 	before(function () {
-		requireWithCoverage('filter');
+		requireWithCoverage('filter')(mongoose);
 
 		mongoose.Query.prototype.or = function (clause) {
 			if (clause) {

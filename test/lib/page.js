@@ -1,5 +1,3 @@
-var mongoose = require('mongoose');
-
 describe('page', function () {
 
 	var
@@ -12,7 +10,7 @@ describe('page', function () {
 		total = 1000;
 
 	before(function () {
-		pageLib = requireWithCoverage('page');
+		pageLib = requireWithCoverage('page')(mongoose);
 
 		Kitteh.count = function (search, countCallback) {
 			countCallback(countError, total);

@@ -1,11 +1,9 @@
-var mongoose = require('mongoose');
-
 describe('keyword', function () {
 
 	var orClauseItems = [];
 
 	before(function () {
-		requireWithCoverage('keyword');
+		requireWithCoverage('keyword')(mongoose);
 
 		mongoose.Query.prototype.or = function (clause) {
 			if (clause) {

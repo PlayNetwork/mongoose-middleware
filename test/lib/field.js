@@ -1,11 +1,8 @@
-var mongoose = require('mongoose');
-
 describe('field', function () {
-
 	var fieldsSelected = [];
 
 	before(function () {
-		requireWithCoverage('field');
+		requireWithCoverage('field')(mongoose);
 
 		mongoose.Query.prototype.select = function (field) {
 			if (field) {
