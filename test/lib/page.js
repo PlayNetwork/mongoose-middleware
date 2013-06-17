@@ -67,6 +67,26 @@ describe('page', function () {
 			});
 	});
 
+	it('should default limit to maxDocs when 0 is supplied as count', function (done) {
+		pageLib.initialize({ maxDocs: 25 });
+
+		var options = {
+			start : 0,
+			count : 0
+		};
+
+		Kitteh
+			.find()
+			.page(options, function (err, data) {
+				should.not.exist(err);
+				data.should.not.be.empty;
+				limit.should.equals(25);
+				skip.should.equals(0);
+
+				done();
+			});
+	});
+
 	it('should properly return error when one occurs during count', function (done) {
 		countError = new Error('icanhazacounterr');
 
