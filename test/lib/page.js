@@ -16,7 +16,7 @@ describe('page', function () {
 			countCallback(countError, total);
 		};
 
-		mongoose.Query.prototype.execFind = function (findCallback) {
+		mongoose.Query.prototype.exec = function (findCallback) {
 			search = this._conditions;
 			findCallback(execError, []);
 		};

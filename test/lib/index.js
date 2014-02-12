@@ -15,7 +15,7 @@ describe('index', function () {
 			countCallback(null, 0);
 		};
 
-		mongoose.Query.prototype.execFind = function (findCallback) {
+		mongoose.Query.prototype.exec = function (findCallback) {
 			findCallback(null, []);
 		};
 
