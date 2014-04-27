@@ -132,7 +132,7 @@ describe('filter', function () {
                 filters : {
                     mandatory : {
                         exact : {
-                            isDead : true
+                            isDead : false
                         }
                     }
                 }
@@ -142,9 +142,10 @@ describe('filter', function () {
                 .find()
                 .filter(options);
 
+
             should.exist(query);
             should.exist(whereClause.isDead);
-            whereClause.isDead.should.equals(true);
+            whereClause.isDead.should.equals(false);
         });
 	});
 
@@ -214,6 +215,28 @@ describe('filter', function () {
 			orClauseItems[0][0].name.test('cat litter').should.equals(false);
 			orClauseItems[0][0].name.test('the cat').should.equals(false);
 		});
+
+        it ('should look for occurrences of an exact match of the object when using exact', function () {
+            var options = {
+                filters : {
+                    optional : {
+                        exact : {
+                            isDead : true
+                        }
+                    }
+                }
+            };
+
+            var query = Kitteh
+                .find()
+                .filter(options);
+
+            should.exist(query);
+            orClauseItems.should.have.length(1);
+            orClauseItems[0][0].isDead.should.equals(true);
+            //orClauseItems[0][0].name.test('cat litter').should.equals(false);
+            //orClauseItems[0][0].name.test('the cat').should.equals(false);
+        });
 
 		it ('should look for multiple occurrences of a match when supplying an array', function () {
 			var options = {
