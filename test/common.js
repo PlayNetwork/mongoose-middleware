@@ -22,6 +22,7 @@ global.Kitteh = mongoose.model(
 			color : String,
 			isFurreh : Boolean
 		},
+        isDead: Boolean,
 		home : String,
 		name : String,
 		peePatches : [String]
