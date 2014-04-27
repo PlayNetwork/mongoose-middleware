@@ -1,3 +1,7 @@
+# 0.3.4 / 2014-04-27
+
+* Fixed defect to enable support for boolean properties
+
 # 0.2.3 / 2014-02-11
 
 * Changed use of private Mongoose query method `execFind` to public method `exec`
