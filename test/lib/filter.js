@@ -17,7 +17,10 @@ describe('filter', function () {
 			return {
 				regex : function (value) {
 					whereClause[key] = value;
-				}
+				},
+                equals: function(value){
+                    whereClause[key] = value;
+                }
 			}
 		};
 	});
