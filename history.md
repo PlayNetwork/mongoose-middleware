@@ -1,4 +1,8 @@
-# 0.3.4 / 2014-04-27
+# 0.2.5 /2014-04-29
+
+* Further refined support for boolean properties
+
+# 0.2.4 / 2014-04-27
 
 * Fixed defect to enable support for boolean properties
 
