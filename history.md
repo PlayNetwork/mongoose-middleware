@@ -1,3 +1,7 @@
+# 0.2.7 / 2014-06-28
+
+* Removing testing on Node v0.8 from Travis CI
+
 # 0.2.6 / 2014-06-27
 
 * Fixing documentation to remove references to `execFind`
