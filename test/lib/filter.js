@@ -130,26 +130,25 @@ describe('filter', function () {
 			whereClause.name.test('the cat').should.equals(false);
 		});
 
-        it ('should look for occurrences of an exact match of the object when using exact', function () {
-            var options = {
-                filters : {
-                    mandatory : {
-                        exact : {
-                            isDead : false
-                        }
-                    }
-                }
-            };
+	it ('should look for occurrences of an exact match of the object when using exact', function () {
+		var options = {
+			filters : {
+				mandatory : {
+					exact : {
+						isDead : false
+					}
+				}
+			}
+		};
 
-            var query = Kitteh
-                .find()
-                .filter(options);
+		var query = Kitteh
+			.find()
+			.filter(options);
 
-
-            should.exist(query);
-            should.exist(whereClause.isDead);
-            whereClause.isDead.should.equals(false);
-        });
+			should.exist(query);
+			should.exist(whereClause.isDead);
+			whereClause.isDead.should.equals(false);
+		});
 	});
 
 	describe('optional filters', function () {

@@ -66,7 +66,7 @@ require('mongoose-middleware').initialize(mongoose);
 	should be sorted by birthday in descending order and name in ascending order.
 */
 var options = {
-	filter : {
+	filters : {
 		field : ['name', 'home', 'features.color'],
 		mandatory : {
 			contains : {
@@ -115,7 +115,7 @@ The options submitted to the `page(options, callback)` middleware method are ech
 {
 	options : {
 		count : 500,
-		filter : {
+		filters : {
 			field : ['name', 'home', 'features.color'],
 			mandatory : {
 				contains : {
@@ -170,7 +170,7 @@ var options = {
 KittehModel
 	.find()
 	.field(options)
-	.execFind(function (err, results) {
+	.exec(function (err, results) {
 		// work with response...
 	});
 
@@ -182,7 +182,7 @@ Alternatively, a single field can be specified (not in an array):
 KittehModel
 	.find()
 	.field({ filters : { field : '_id' } })
-	.execFind(callback);
+	.exec(callback);
 ```
 
 ### Filters
@@ -215,7 +215,7 @@ var options = {
 KittehModel
 	.find()
 	.filter(options)
-	.execFind(function (err, results) {
+	.exec(function (err, results) {
 		// work with response...
 	});
 ```
@@ -239,7 +239,7 @@ var options = {
 KittehModel
 	.find()
 	.filter(options)
-	.execFind(function (err, results) {
+	.exec(function (err, results) {
 		// work with response...
 	});
 ```
@@ -273,7 +273,7 @@ var options = {
 KittehModel
 	.find()
 	.order(options)
-	.execFind(function (err, results) {
+	.exec(function (err, results) {
 		// work with response...
 	});
 ```
@@ -300,7 +300,7 @@ var options = {
 KittehModel
 	.find()
 	.order(options)
-	.execFind(function (err, results) {
+	.exec(function (err, results) {
 		// work with response...
 	});
 ```

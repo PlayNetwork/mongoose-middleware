@@ -1,4 +1,9 @@
-# 0.2.5 /2014-04-29
+# 0.2.6 / 2014-06-27
+
+* Fixing documentation to remove references to `execFind`
+* Fixing documentation to appropriately use `filters` in the input options
+
+# 0.2.5 / 2014-04-29
 
 * Further refined support for boolean properties
 
