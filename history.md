@@ -1,3 +1,7 @@
+# 0.2.8 / 2014-08-26
+
+* Modifying how Mongoose `#where` method is used in filters to be compliant with Mongoose 3.x
+
 # 0.2.7 / 2014-06-28
 
 * Removing testing on Node v0.8 from Travis CI
