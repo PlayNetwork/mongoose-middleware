@@ -13,15 +13,8 @@ describe('filter', function () {
 			}
 		};
 
-		mongoose.Query.prototype.where = function (key) {
-			return {
-				regex : function (value) {
-					whereClause[key] = value;
-				},
-				equals : function (value) {
-					whereClause[key] = value;
-				}
-			}
+		mongoose.Query.prototype.where = function (key, val) {
+			whereClause[key] = val;
 		};
 	});
 
