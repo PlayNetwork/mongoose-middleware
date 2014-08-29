@@ -1,28 +1,33 @@
 {
-	"name" : "mongoose-middleware",
-	"description" : "Middleware for mongoose that makes filtering, sorting, pagination and projection chainable and simple to apply",
-	"version" : "0.2.2",
-	"scripts" : {
-		"pretest" : "rm -rf lib-cov ; jshint lib/*.js ; jscoverage lib lib-cov",
-		"test" : "mocha --check-leaks -R spec -r ./test/common.js -u bdd ./test/lib/*.js",
-		"posttest" : "rm -rf reports ; mkdir -p reports ; MONGOOSE_MIDDLEWARE_COVERAGE=true mocha --check-leaks -R mocha-lcov-reporter -r ./test/common.js -u bdd ./test/lib/*.js | ./node_modules/coveralls/bin/coveralls.js"
-	},
-	"devDependencies" : {
-		"chai" : "*",
-		"coveralls" : "*",
-		"jscoverage" : "*",
-		"jshint" : "*",
-		"mocha" : "*",
-		"mocha-lcov-reporter" : "*",
-		"mongoose" : "~3.6.11"
-	},
-	"keywords" : ["mongo", "mongoose", "mongoose middlware", "mongoose-middleware"],
-	"repository" : {
-		"type" : "git",
-		"url" : "git@github.com:PlayNetwork/mongoose-middleware.git"
-	},
-	"main" : "lib",
-	"engines" : {
-		"node" : ">=0.8.0"
-	}
+  "name": "mongoose-middleware",
+  "description": "Middleware for mongoose that makes filtering, sorting, pagination and projection chainable and simple to apply",
+  "version": "0.2.3",
+  "scripts": {
+    "pretest": "rm -rf lib-cov ; jshint lib/*.js ; jscoverage lib lib-cov",
+    "test": "mocha --check-leaks -R spec -r ./test/common.js -u bdd ./test/lib/*.js",
+    "posttest": "rm -rf reports ; mkdir -p reports ; MONGOOSE_MIDDLEWARE_COVERAGE=true mocha --check-leaks -R mocha-lcov-reporter -r ./test/common.js -u bdd ./test/lib/*.js | ./node_modules/coveralls/bin/coveralls.js"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "coveralls": "*",
+    "jscoverage": "*",
+    "jshint": "*",
+    "mocha": "*",
+    "mocha-lcov-reporter": "*",
+    "mongoose": "~3.6.11"
+  },
+  "keywords": [
+    "mongo",
+    "mongoose",
+    "mongoose middlware",
+    "mongoose-middleware"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:PlayNetwork/mongoose-middleware.git"
+  },
+  "main": "lib",
+  "engines": {
+    "node": ">=0.8.0"
+  }
 }
