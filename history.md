@@ -1,3 +1,7 @@
+# 0.2.9 / 2014-08-28
+
+* Adding support for `endsWith` optional and mandatory filters
+
 # 0.2.8 / 2014-08-26
 
 * Modifying how Mongoose `#where` method is used in filters to be compliant with Mongoose 3.x
