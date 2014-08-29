@@ -192,6 +192,7 @@ Filters can be used in three ways: mandatory, optional and keyword searches. Add
 * `exact` - Matches the string letter for letter, but is not case sensitive
 * `contains` - Matches documents where the string exists as a substring of the field (similar to a where field like '%term%' query in a relational datastore)
 * `startsWith` - Matches documents where field begins with the string supplied (similar to a where field like 'term%' query in a relational datastore)
+* `endsWith` - Matches documents where field ends with the string supplied (similar to a where field like '%term' query in a relational datastore)
 
 #### Mandatory
 
@@ -318,7 +319,7 @@ var options = {
 
 ### Pagination
 
-Pagination is performed by swapping the `exec()` or `execFind()` function of Mongoose with `page()`. Pagination may be specified as follows:
+Pagination is performed by swapping the `exec()` function of Mongoose with `page()`. Pagination may be specified as follows:
 
 ```Javascript
 var options = {
