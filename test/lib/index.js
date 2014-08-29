@@ -15,7 +15,7 @@ describe('index', function () {
 			countCallback(null, 0);
 		};
 
-		mongoose.Query.prototype.execFind = function (findCallback) {
+		mongoose.Query.prototype.exec = function (findCallback) {
 			findCallback(null, []);
 		};
 
@@ -49,6 +49,9 @@ describe('index', function () {
 			return {
 				regex : function (value) {
 					whereClause[key] = value;
+				},
+				equals : function (value) {
+					whereClause[key] = value;
 				}
 			}
 		};
@@ -81,7 +84,7 @@ describe('index', function () {
 
 	it('should properly require all middleware components', function (done) {
 		var options = {
-			filter : {
+			filters : {
 				field : ['name', 'home', 'features.color'],
 				mandatory : {
 					contains : {

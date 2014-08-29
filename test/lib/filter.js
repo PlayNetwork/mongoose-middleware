@@ -13,12 +13,8 @@ describe('filter', function () {
 			}
 		};
 
-		mongoose.Query.prototype.where = function (key) {
-			return {
-				regex : function (value) {
-					whereClause[key] = value;
-				}
-			}
+		mongoose.Query.prototype.where = function (key, val) {
+			whereClause[key] = val;
 		};
 	});
 
@@ -148,6 +144,26 @@ describe('filter', function () {
 			whereClause.name.test('cat litter').should.equals(false);
 			whereClause.name.test('the cat').should.equals(false);
 		});
+
+	it ('should look for occurrences of an exact match of the object when using exact', function () {
+		var options = {
+			filters : {
+				mandatory : {
+					exact : {
+						isDead : false
+					}
+				}
+			}
+		};
+
+		var query = Kitteh
+			.find()
+			.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.isDead);
+			whereClause.isDead.should.equals(false);
+		});
 	});
 
 	describe('optional filters', function () {
@@ -238,6 +254,28 @@ describe('filter', function () {
 			orClauseItems[0][0].name.test('cat litter').should.equals(false);
 			orClauseItems[0][0].name.test('the cat').should.equals(false);
 		});
+
+        it ('should look for occurrences of an exact match of the object when using exact', function () {
+            var options = {
+                filters : {
+                    optional : {
+                        exact : {
+                            isDead : true
+                        }
+                    }
+                }
+            };
+
+            var query = Kitteh
+                .find()
+                .filter(options);
+
+            should.exist(query);
+            orClauseItems.should.have.length(1);
+            orClauseItems[0][0].isDead.should.equals(true);
+            //orClauseItems[0][0].name.test('cat litter').should.equals(false);
+            //orClauseItems[0][0].name.test('the cat').should.equals(false);
+        });
 
 		it ('should look for multiple occurrences of a match when supplying an array', function () {
 			var options = {
