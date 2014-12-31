@@ -1,9 +1,30 @@
-describe('order', function () {
+var
+	chai = require('chai'),
+	should = chai.should();
 
-	var sortClauseItems = [];
+
+describe('order', function () {
+	'use strict';
+
+	var
+		mongoose = require('mongoose'),
+		orderLib = null,
+		sortClauseItems = [];
+
+	var Kitteh = mongoose.model('kittehs-order', new mongoose.Schema({
+		birthday : { type : Date, default : Date.now },
+		features : {
+			color : String,
+			isFurreh : Boolean
+		},
+		isDead: Boolean,
+		home : String,
+		name : String,
+		peePatches : [String]
+	}));
 
 	before(function () {
-		requireWithCoverage('order')(mongoose);
+		orderLib = require('../../lib/order')(mongoose);
 
 		mongoose.Query.prototype.sort = function (clause) {
 			if (clause) {
@@ -21,6 +42,7 @@ describe('order', function () {
 			.find()
 			.order(null);
 
+		should.exist(query);
 		(query instanceof mongoose.Query).should.equals(true);
 	});
 
@@ -31,7 +53,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = Kitteh
+		Kitteh
 			.find()
 			.order(options);
 
@@ -46,7 +68,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = Kitteh
+		Kitteh
 			.find()
 			.order(options);
 
@@ -62,7 +84,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = Kitteh
+		Kitteh
 			.find()
 			.order(options);
 
@@ -77,7 +99,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = Kitteh
+		Kitteh
 			.find()
 			.order(options);
 
@@ -94,7 +116,7 @@ describe('order', function () {
 			}
 		};
 
-		var query = Kitteh
+		Kitteh
 			.find()
 			.order(options);
 
