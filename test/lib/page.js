@@ -1,16 +1,35 @@
+var
+	chai = require('chai'),
+	should = chai.should();
+
+
 describe('page', function () {
+	'use strict';
 
 	var
 		countError = null,
 		execError = null,
 		limit = 0,
+		mongoose = require('mongoose'),
 		pageLib = null,
 		search = null,
 		skip = 0,
 		total = 1000;
 
+	var Kitteh = mongoose.model('kittehs-page', new mongoose.Schema({
+		birthday : { type : Date, default : Date.now },
+		features : {
+			color : String,
+			isFurreh : Boolean
+		},
+		isDead: Boolean,
+		home : String,
+		name : String,
+		peePatches : [String]
+	}));
+
 	before(function () {
-		pageLib = requireWithCoverage('page')(mongoose);
+		pageLib = require('../../lib/page')(mongoose);
 
 		Kitteh.count = function (search, countCallback) {
 			countCallback(countError, total);
@@ -45,10 +64,10 @@ describe('page', function () {
 			.find()
 			.page(null, function (err, data) {
 				should.not.exist(err);
-				data.should.not.be.empty;
+				data.should.not.be.empty();
 				skip.should.equals(0);
 
-				done();
+				return done();
 			});
 	});
 
@@ -59,11 +78,11 @@ describe('page', function () {
 			.find()
 			.page(null, function (err, data) {
 				should.not.exist(err);
-				data.should.not.be.empty;
+				data.should.not.be.empty();
 				limit.should.equals(25);
 				skip.should.equals(0);
 
-				done();
+				return done();
 			});
 	});
 
@@ -79,11 +98,11 @@ describe('page', function () {
 			.find()
 			.page(options, function (err, data) {
 				should.not.exist(err);
-				data.should.not.be.empty;
+				data.should.not.be.empty();
 				limit.should.equals(25);
 				skip.should.equals(0);
 
-				done();
+				return done();
 			});
 	});
 
@@ -96,7 +115,7 @@ describe('page', function () {
 				should.exist(err);
 				should.not.exist(data);
 
-				done();
+				return done();
 			});
 	});
 
@@ -109,7 +128,7 @@ describe('page', function () {
 				should.exist(err);
 				should.not.exist(data);
 
-				done();
+				return done();
 			});
 	});
 
@@ -129,10 +148,10 @@ describe('page', function () {
 
 				data.options.start.should.equals(0);
 				data.options.count.should.equals(50);
-				data.results.should.be.empty;
+				data.results.should.be.empty();
 				data.total.should.equals(total);
 
-				done();
+				return done();
 			});
 	});
 
@@ -152,7 +171,7 @@ describe('page', function () {
 
 				data.options.count.should.equals(50);
 
-				done();
+				return done();
 			});
 	});
 });

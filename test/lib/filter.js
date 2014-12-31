@@ -1,11 +1,31 @@
+var
+	chai = require('chai'),
+	should = chai.should();
+
+
 describe('filter', function () {
+	'use strict';
 
 	var
+		filterLib = null,
+		mongoose = require('mongoose'),
 		orClauseItems = [],
 		whereClause = {};
 
+	var Kitteh = mongoose.model('kittehs-filter', new mongoose.Schema({
+		birthday : { type : Date, default : Date.now },
+		features : {
+			color : String,
+			isFurreh : Boolean
+		},
+		isDead: Boolean,
+		home : String,
+		name : String,
+		peePatches : [String]
+	}));
+
 	before(function () {
-		requireWithCoverage('filter')(mongoose);
+		filterLib = require('../../lib/filter')(mongoose);
 
 		mongoose.Query.prototype.or = function (clause) {
 			if (clause) {

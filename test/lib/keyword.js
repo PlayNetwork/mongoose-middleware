@@ -1,9 +1,30 @@
-describe('keyword', function () {
+var
+	chai = require('chai'),
+	should = chai.should();
 
-	var orClauseItems = [];
+
+describe('keyword', function () {
+	'use strict';
+
+	var
+		keywordLib = null,
+		mongoose = require('mongoose'),
+		orClauseItems = [];
+
+	var Kitteh = mongoose.model('kittehs-keyword', new mongoose.Schema({
+		birthday : { type : Date, default : Date.now },
+		features : {
+			color : String,
+			isFurreh : Boolean
+		},
+		isDead: Boolean,
+		home : String,
+		name : String,
+		peePatches : [String]
+	}));
 
 	before(function () {
-		requireWithCoverage('keyword')(mongoose);
+		keywordLib = require('../../lib/keyword')(mongoose);
 
 		mongoose.Query.prototype.or = function (clause) {
 			if (clause) {
@@ -70,7 +91,7 @@ describe('keyword', function () {
 					term : 'lawn'
 				}
 			}
-		}
+		};
 
 		var query = Kitteh
 			.find()
@@ -78,8 +99,8 @@ describe('keyword', function () {
 
 		should.exist(query);
 		orClauseItems[0].should.have.length(2);
-		orClauseItems[0][1].peePatches.$in.should.exist;
-	})
+		orClauseItems[0][1].peePatches.$in.should.exist();
+	});
 
 	it ('should search for keyword occurrences with multiple words', function () {
 		var options = {
