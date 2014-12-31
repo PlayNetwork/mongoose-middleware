@@ -35,7 +35,30 @@ describe('filter', function () {
 		};
 
 		mongoose.Query.prototype.where = function (key, val) {
+			if (typeof val === 'undefined') {
+				val = { expr : '', val : null };
+			}
+
 			whereClause[key] = val;
+
+			return {
+				gt : function (v) {
+					whereClause[key].expr = 'gt';
+					whereClause[key].val = v;
+				},
+				gte : function (v) {
+					whereClause[key].expr = 'gte';
+					whereClause[key].val = v;
+				},
+				lt : function (v) {
+					whereClause[key].expr = 'lt';
+					whereClause[key].val = v;
+				},
+				lte : function (v) {
+					whereClause[key].expr = 'lte';
+					whereClause[key].val = v;
+				}
+			};
 		};
 	});
 
@@ -205,6 +228,166 @@ describe('filter', function () {
 			should.exist(whereClause.id);
 			whereClause.id.should.equals(12345);
 		});
+
+		it ('should properly apply where clause when using greaterThan filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						greaterThan : {
+							birthday : new Date(2014, 12, 1)
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.birthday);
+			whereClause.birthday.expr.should.equal('gt');
+		});
+
+		it ('should properly apply where clause when using gt filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						gt : {
+							birthday : new Date(2014, 12, 1)
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.birthday);
+			whereClause.birthday.expr.should.equal('gt');
+		});
+
+		it ('should properly apply where clause when using greaterThanEqual filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						greaterThanEqual : {
+							birthday : new Date(2014, 12, 1)
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.birthday);
+			whereClause.birthday.expr.should.equal('gte');
+		});
+
+		it ('should properly apply where clause when using gte filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						gte : {
+							birthday : new Date(2014, 12, 1)
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.birthday);
+			whereClause.birthday.expr.should.equal('gte');
+		});
+
+		it ('should properly apply where clause when using lessThan filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						lessThan : {
+							birthday : new Date(2014, 12, 1)
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.birthday);
+			whereClause.birthday.expr.should.equal('lt');
+		});
+
+		it ('should properly apply where clause when using lt filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						lt : {
+							birthday : new Date(2014, 12, 1)
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.birthday);
+			whereClause.birthday.expr.should.equal('lt');
+		});
+
+		it ('should properly apply where clause when using lessThanEqual filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						lessThanEqual : {
+							birthday : new Date(2014, 12, 1)
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.birthday);
+			whereClause.birthday.expr.should.equal('lte');
+		});
+
+		it ('should properly apply where clause when using lte filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						lte : {
+							birthday : new Date(2014, 12, 1)
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.birthday);
+			whereClause.birthday.expr.should.equal('lte');
+		});
 	});
 
 	describe('optional filters', function () {
@@ -296,27 +479,25 @@ describe('filter', function () {
 			orClauseItems[0][0].name.test('the cat').should.equals(false);
 		});
 
-        it ('should look for occurrences of an exact match of the object when using exact', function () {
-            var options = {
-                filters : {
-                    optional : {
-                        exact : {
-                            isDead : true
-                        }
-                    }
-                }
-            };
+		it ('should look for occurrences of an exact match of the object when using exact', function () {
+			var options = {
+				filters : {
+					optional : {
+						exact : {
+							isDead : true
+						}
+					}
+				}
+			};
 
-            var query = Kitteh
-                .find()
-                .filter(options);
+			var query = Kitteh
+				.find()
+				.filter(options);
 
-            should.exist(query);
-            orClauseItems.should.have.length(1);
-            orClauseItems[0][0].isDead.should.equals(true);
-            //orClauseItems[0][0].name.test('cat litter').should.equals(false);
-            //orClauseItems[0][0].name.test('the cat').should.equals(false);
-        });
+			should.exist(query);
+			orClauseItems.should.have.length(1);
+			orClauseItems[0][0].isDead.should.equals(true);
+		});
 
 		it ('should look for multiple occurrences of a match when supplying an array', function () {
 			var options = {
