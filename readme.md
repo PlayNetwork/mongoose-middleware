@@ -62,8 +62,9 @@ require('mongoose-middleware').initialize(mongoose);
 
 /*
 	Retrieve the name, home and features.color of kittehs that live in Seattle,
-	that are named "Hamish" and that are brindle, black or white in color. The results
-	should be sorted by birthday in descending order and name in ascending order.
+	that are named "Hamish" and that are brindle, black or white in color and born
+	prior to January 1st, 2014. The results should be sorted by birthday in
+	descending order and name in ascending order.
 */
 var options = {
 	filters : {
@@ -74,6 +75,9 @@ var options = {
 			},
 			exact : {
 				name : 'Hamish'
+			},
+			lessThan : {
+				birthday : new Date(2014, 1, 1)
 			}
 		},
 		optional : {
@@ -193,6 +197,10 @@ Filters can be used in three ways: mandatory, optional and keyword searches. Add
 * `contains` - Matches documents where the string exists as a substring of the field (similar to a where field like '%term%' query in a relational datastore)
 * `startsWith` - Matches documents where field begins with the string supplied (similar to a where field like 'term%' query in a relational datastore)
 * `endsWith` - Matches documents where field ends with the string supplied (similar to a where field like '%term' query in a relational datastore)
+* `greaterThan` (or `gt`) - Matches documents where field value is greater than supplied number or Date value in query
+* `greaterThanEqual` (or `gte`) - Matches documents where field value is greater than or equal to supplied number or Date value in query
+* `lessThan` (or `lt`) - Matches documents where field value is less than supplied number or Date value in query
+* `lessThanEqual` (or `lte`) - Matches documents where field value is less than or equal to supplied number or Date value in query
 
 #### Mandatory
 
