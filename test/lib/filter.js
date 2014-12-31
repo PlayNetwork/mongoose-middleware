@@ -18,6 +18,7 @@ describe('filter', function () {
 			color : String,
 			isFurreh : Boolean
 		},
+		id : Number,
 		isDead: Boolean,
 		home : String,
 		name : String,
@@ -165,24 +166,44 @@ describe('filter', function () {
 			whereClause.name.test('the cat').should.equals(false);
 		});
 
-	it ('should look for occurrences of an exact match of the object when using exact', function () {
-		var options = {
-			filters : {
-				mandatory : {
-					exact : {
-						isDead : false
+		it ('should look for occurrences of an exact match of the object when using exact', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						exact : {
+							isDead : false
+						}
 					}
 				}
-			}
-		};
+			};
 
-		var query = Kitteh
-			.find()
-			.filter(options);
+			var query = Kitteh
+				.find()
+				.filter(options);
 
 			should.exist(query);
 			should.exist(whereClause.isDead);
 			whereClause.isDead.should.equals(false);
+		});
+
+		it ('should look for occurrences of an exact match of a number when using exact', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						exact : {
+							id : 12345
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.id);
+			whereClause.id.should.equals(12345);
 		});
 	});
 
