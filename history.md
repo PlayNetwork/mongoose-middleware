@@ -1,3 +1,7 @@
+# 0.2.12 / 2014-04-28
+
+* Fixing a bug with the sanitization of values prior to creating a regex match
+
 # 0.2.11 / 2015-04-28
 
 * @schiang introduced fix for exact match on boolean values
