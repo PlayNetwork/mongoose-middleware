@@ -1,3 +1,7 @@
+# 0.2.11 / 2015-04-28
+
+* @schiang introduced fix for exact match on boolean values
+
 # 0.2.10 / 2014-12-31
 
 * Moving to gulp for build and testing
