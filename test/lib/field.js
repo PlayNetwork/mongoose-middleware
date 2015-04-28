@@ -1,8 +1,30 @@
+var
+	chai = require('chai'),
+	should = chai.should();
+
+
 describe('field', function () {
-	var fieldsSelected = [];
+	'use strict';
+
+	var
+		fieldLib = null,
+		fieldsSelected = [],
+		mongoose = require('mongoose');
+
+	var Kitteh = mongoose.model('kittehs-field', new mongoose.Schema({
+		birthday : { type : Date, default : Date.now },
+		features : {
+			color : String,
+			isFurreh : Boolean
+		},
+		isDead: Boolean,
+		home : String,
+		name : String,
+		peePatches : [String]
+	}));
 
 	before(function () {
-		requireWithCoverage('field')(mongoose);
+		fieldLib = require('../../lib/field')(mongoose);
 
 		mongoose.Query.prototype.select = function (field) {
 			if (field) {

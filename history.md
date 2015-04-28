@@ -1,3 +1,9 @@
+# 0.2.10 / 2014-12-31
+
+* Moving to gulp for build and testing
+* Fixed bug where `exact` matches to number values was not working
+* Introduced support for `greaterThan` and `lessThan` mandatory filters
+
 # 0.2.9 / 2014-08-28
 
 * Adding support for `endsWith` optional and mandatory filters

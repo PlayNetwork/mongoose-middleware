@@ -1,14 +1,33 @@
+var
+	chai = require('chai'),
+	should = chai.should();
+
+
 describe('index', function () {
+	'use strict';
 
 	var
 		fieldsSelected = [],
 		indexLib = null,
+		mongoose = require('mongoose'),
 		orClauseItems = [],
 		sortClauseItems = [],
 		whereClause = {};
 
+	var Kitteh = mongoose.model('kittehs-index', new mongoose.Schema({
+		birthday : { type : Date, default : Date.now },
+		features : {
+			color : String,
+			isFurreh : Boolean
+		},
+		isDead: Boolean,
+		home : String,
+		name : String,
+		peePatches : [String]
+	}));
+
 	before(function () {
-		indexLib = requireWithCoverage('index');
+		indexLib = require('../../lib/index');
 		indexLib.initialize(mongoose);
 
 		Kitteh.count = function (search, countCallback) {
@@ -19,7 +38,7 @@ describe('index', function () {
 			findCallback(null, []);
 		};
 
-		mongoose.Query.prototype.limit = function (input) {
+		mongoose.Query.prototype.limit = function () {
 			return this;
 		};
 
@@ -29,7 +48,7 @@ describe('index', function () {
 			}
 		};
 
-		mongoose.Query.prototype.skip = function (input) {
+		mongoose.Query.prototype.skip = function () {
 			return this;
 		};
 
@@ -53,7 +72,7 @@ describe('index', function () {
 				equals : function (value) {
 					whereClause[key] = value;
 				}
-			}
+			};
 		};
 	});
 
@@ -78,7 +97,7 @@ describe('index', function () {
 				should.exist(data);
 				data.options.count.should.equals(1000);
 
-				done();
+				return done();
 			});
 	});
 
@@ -118,7 +137,7 @@ describe('index', function () {
 				should.not.exist(err);
 				should.exist(data);
 
-				done();
+				return done();
 			});
 	});
 });
