@@ -125,4 +125,12 @@ describe('field', function () {
 		fieldsSelected.should.have.length(0);
 	});
 
+	it ('should split comma delim strings when supplied for field', function () {
+		var query = Kitteh
+			.find()
+			.field({ filters : { field : 'home,name,unknownField' }});
+
+		should.exist(query);
+		fieldsSelected.should.have.length(2);
+	});
 });
