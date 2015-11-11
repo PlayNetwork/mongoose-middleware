@@ -1,3 +1,7 @@
+# v0.2.13 / 2015-11-11
+
+* Adding ability to specify filters as arrays via comma-delim strings
+
 # 0.2.12 / 2014-04-28
 
 * Fixing a bug with the sanitization of values prior to creating a regex match
