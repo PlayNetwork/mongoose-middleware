@@ -57,6 +57,10 @@ describe('filter', function () {
 				lte : function (v) {
 					whereClause[key].expr = 'lte';
 					whereClause[key].val = v;
+				},
+				ne : function (v) {
+					whereClause[key].expr = 'ne';
+					whereClause[key].val = v;
 				}
 			};
 		};
@@ -387,6 +391,46 @@ describe('filter', function () {
 			should.exist(query);
 			should.exist(whereClause.birthday);
 			whereClause.birthday.expr.should.equal('lte');
+		});
+
+		it ('should properly apply where clause when using notEqual filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						notEqual : {
+							name : 'cat'
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.name);
+			whereClause.name.expr.should.equal('ne');
+		});
+
+		it ('should properly apply where clause when using ne filter', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						notEqual : {
+							name : 'cat'
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.name);
+			whereClause.name.expr.should.equal('ne');
 		});
 	});
 
