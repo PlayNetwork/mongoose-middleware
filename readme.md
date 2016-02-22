@@ -201,6 +201,7 @@ Filters can be used in three ways: mandatory, optional and keyword searches. Add
 * `greaterThanEqual` (or `gte`) - Matches documents where field value is greater than or equal to supplied number or Date value in query
 * `lessThan` (or `lt`) - Matches documents where field value is less than supplied number or Date value in query
 * `lessThanEqual` (or `lte`) - Matches documents where field value is less than or equal to supplied number or Date value in query
+* `notEqual` (or `ne`) - Matches documents where field value is not equal to the supplied value
 
 #### Mandatory
 
