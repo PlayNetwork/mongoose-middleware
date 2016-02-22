@@ -1,3 +1,9 @@
+# v0.2.14 / 2016-02-22
+
+* Increasing code coverage of unit tests with minor refactors
+* Adding `gulp coveralls` task to end of Travis build
+* Adding support for `notEqual` mandatory and optional filters
+
 # v0.2.13 / 2015-11-11
 
 * Adding ability to specify filters as arrays via comma-delim strings
