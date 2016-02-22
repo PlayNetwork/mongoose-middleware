@@ -21,6 +21,7 @@ gulp.task('coveralls', function () {
 		.pipe(coveralls());
 });
 
+
 gulp.task('jshint', function () {
 	return gulp
 		.src(['lib/**/*.js', 'test/**/*.js'])
