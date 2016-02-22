@@ -9,7 +9,7 @@ describe('filter', function () {
 	var
 		filterLib = null,
 		mongoose = require('mongoose'),
-		orClauseItems = [],
+		orClause = {},
 		whereClause = {};
 
 	var Kitteh = mongoose.model('kittehs-filter', new mongoose.Schema({
@@ -28,10 +28,40 @@ describe('filter', function () {
 	before(function () {
 		filterLib = require('../../lib/filter')(mongoose);
 
-		mongoose.Query.prototype.or = function (clause) {
-			if (clause) {
-				orClauseItems.push(clause);
+		mongoose.Query.prototype.or = function (key, val) {
+			if (typeof val === 'undefined') {
+				val = { expr : '', val : null };
 			}
+
+			if (orClause[key]) {
+				var newVal = [orClause[key], val];
+				orClause[key] = newVal;
+			} else {
+				orClause[key] = val;
+			}
+
+			return {
+				gt : function (v) {
+					orClause[key].expr = 'gt';
+					orClause[key].val = v;
+				},
+				gte : function (v) {
+					orClause[key].expr = 'gte';
+					orClause[key].val = v;
+				},
+				lt : function (v) {
+					orClause[key].expr = 'lt';
+					orClause[key].val = v;
+				},
+				lte : function (v) {
+					orClause[key].expr = 'lte';
+					orClause[key].val = v;
+				},
+				ne : function (v) {
+					orClause[key].expr = 'ne';
+					orClause[key].val = v;
+				}
+			};
 		};
 
 		mongoose.Query.prototype.where = function (key, val) {
@@ -39,7 +69,12 @@ describe('filter', function () {
 				val = { expr : '', val : null };
 			}
 
-			whereClause[key] = val;
+			if (whereClause[key]) {
+				var newVal = [whereClause[key], val];
+				whereClause[key] = newVal;
+			} else {
+				whereClause[key] = val;
+			}
 
 			return {
 				gt : function (v) {
@@ -67,7 +102,7 @@ describe('filter', function () {
 	});
 
 	beforeEach(function () {
-		orClauseItems = [];
+		orClause = {};
 		whereClause = {};
 	});
 
@@ -101,7 +136,7 @@ describe('filter', function () {
 
 		should.exist(query);
 		should.exist(whereClause.name);
-		orClauseItems.should.have.length(1);
+		should.exist(orClause['features.color']);
 	});
 
 	describe('mandatory filters', function () {
@@ -432,6 +467,34 @@ describe('filter', function () {
 			should.exist(whereClause.name);
 			whereClause.name.expr.should.equal('ne');
 		});
+
+		it ('should look for multiple occurrences of a match when supplying an array', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						endsWith : {
+							name : ['dog', 'brown']
+						},
+						startsWith : {
+							breed : ['short', 'manx']
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.breed);
+			should.exist(whereClause.name);
+
+			whereClause.name[0].test('the dog').should.equals(true);
+			whereClause.name[1].test('is brown').should.equals(true);
+			whereClause.breed[0].test('shorthair').should.equals(true);
+			whereClause.breed[1].test('manx').should.equals(true);
+		});
 	});
 
 	describe('optional filters', function () {
@@ -451,10 +514,10 @@ describe('filter', function () {
 				.filter(options);
 
 			should.exist(query);
-			orClauseItems.should.have.length(1);
-			orClauseItems[0][0].name.test('cat').should.equals(true);
-			orClauseItems[0][0].name.test('a cat exists').should.equals(true);
-			orClauseItems[0][0].name.test('dog').should.equals(false);
+			should.exist(orClause.name);
+			orClause.name.test('cat').should.equals(true);
+			orClause.name.test('a cat exists').should.equals(true);
+			orClause.name.test('dog').should.equals(false);
 		});
 
 		it ('should look for occurrences of a term at the start of a string using endsWith', function () {
@@ -473,10 +536,10 @@ describe('filter', function () {
 				.filter(options);
 
 			should.exist(query);
-			orClauseItems.should.have.length(1);
-			orClauseItems[0][0].name.test('cat').should.equals(true);
-			orClauseItems[0][0].name.test('cool cat').should.equals(true);
-			orClauseItems[0][0].name.test('this cat is sick').should.equals(false);
+			should.exist(orClause.name);
+			orClause.name.test('cat').should.equals(true);
+			orClause.name.test('cool cat').should.equals(true);
+			orClause.name.test('this cat is sick').should.equals(false);
 		});
 
 		it ('should look for occurrences of a term at the start of a string using startsWith', function () {
@@ -495,10 +558,10 @@ describe('filter', function () {
 				.filter(options);
 
 			should.exist(query);
-			orClauseItems.should.have.length(1);
-			orClauseItems[0][0].name.test('cat').should.equals(true);
-			orClauseItems[0][0].name.test('cat exists').should.equals(true);
-			orClauseItems[0][0].name.test('this cat is sick').should.equals(false);
+			should.exist(orClause.name);
+			orClause.name.test('cat').should.equals(true);
+			orClause.name.test('cat exists').should.equals(true);
+			orClause.name.test('this cat is sick').should.equals(false);
 		});
 
 		it ('should look for occurrences of an exact match of the term when using exact', function () {
@@ -517,10 +580,10 @@ describe('filter', function () {
 				.filter(options);
 
 			should.exist(query);
-			orClauseItems.should.have.length(1);
-			orClauseItems[0][0].name.test('cat').should.equals(true);
-			orClauseItems[0][0].name.test('cat litter').should.equals(false);
-			orClauseItems[0][0].name.test('the cat').should.equals(false);
+			should.exist(orClause.name);
+			orClause.name.test('cat').should.equals(true);
+			orClause.name.test('cat litter').should.equals(false);
+			orClause.name.test('the cat').should.equals(false);
 		});
 
 		it ('should look for occurrences of an exact match of the object when using exact', function () {
@@ -539,8 +602,36 @@ describe('filter', function () {
 				.filter(options);
 
 			should.exist(query);
-			orClauseItems.should.have.length(1);
-			orClauseItems[0][0].isDead.should.equals(true);
+			should.exist(orClause.isDead);
+			orClause.isDead.should.equals(true);
+		});
+
+		it ('should look for occurrences of an exact match of the object when using exact', function () {
+			var options = {
+				filters : {
+					optional : {
+						exact : {
+							isAlive : 'true',
+							isDead : 'false',
+							randomField : 'null',
+							intField : '0100',
+							doubleField : '99.99'
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(orClause.isDead);
+			orClause.isAlive.should.equals(true);
+			orClause.isDead.should.equals(false);
+			should.not.exist(orClause.randomField);
+			orClause.intField.should.equals(100);
+			orClause.doubleField.should.equals(99.99);
 		});
 
 		it ('should look for multiple occurrences of a match when supplying an array', function () {
@@ -559,9 +650,9 @@ describe('filter', function () {
 				.filter(options);
 
 			should.exist(query);
-			orClauseItems.should.have.length(1);
-			orClauseItems[0][0].name.test('cat').should.equals(true);
-			orClauseItems[0][1].name.test('Kitteh').should.equals(true);
+			should.exist(orClause.name);
+			orClause.name[0].test('cat').should.equals(true);
+			orClause.name[1].test('Kitteh').should.equals(true);
 		});
 	});
 });
