@@ -99,7 +99,7 @@ describe('keyword', function () {
 
 		should.exist(query);
 		orClauseItems[0].should.have.length(2);
-		orClauseItems[0][1].peePatches.$in.should.exist();
+		should.exist(orClauseItems[0][1].peePatches.$in);
 	});
 
 	it ('should search for keyword occurrences with multiple words', function () {

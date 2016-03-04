@@ -1,3 +1,4 @@
+/* jshint -W030 */ // allows use of .empty
 var
 	chai = require('chai'),
 	should = chai.should();
@@ -64,7 +65,7 @@ describe('page', function () {
 			.find()
 			.page(null, function (err, data) {
 				should.not.exist(err);
-				data.should.not.be.empty();
+				data.should.not.be.empty;
 				skip.should.equals(0);
 
 				return done();
@@ -78,7 +79,7 @@ describe('page', function () {
 			.find()
 			.page(null, function (err, data) {
 				should.not.exist(err);
-				data.should.not.be.empty();
+				data.should.not.be.empty;
 				limit.should.equals(25);
 				skip.should.equals(0);
 
@@ -98,7 +99,7 @@ describe('page', function () {
 			.find()
 			.page(options, function (err, data) {
 				should.not.exist(err);
-				data.should.not.be.empty();
+				data.should.not.be.empty;
 				limit.should.equals(25);
 				skip.should.equals(0);
 
@@ -148,7 +149,7 @@ describe('page', function () {
 
 				data.options.start.should.equals(0);
 				data.options.count.should.equals(50);
-				data.results.should.be.empty();
+				data.results.should.be.empty;
 				data.total.should.equals(total);
 
 				return done();
