@@ -1,5 +1,6 @@
 # v0.2.15 / 2016-03-04
 
+* Fixed issue where there was an incompatibility with mquery module in mongoose
 * Updated dependencies
 
 # v0.2.14 / 2016-02-22
