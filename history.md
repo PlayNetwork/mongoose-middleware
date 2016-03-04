@@ -1,3 +1,7 @@
+# v0.2.15 / 2016-03-04
+
+* Updated dependencies
+
 # v0.2.14 / 2016-02-22
 
 * Increasing code coverage of unit tests with minor refactors
