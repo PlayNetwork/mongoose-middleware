@@ -45,28 +45,33 @@ describe('filter', function () {
 				});
 			}
 
-			/*return {
-				gt : function (v) {
-					orClause[key].expr = 'gt';
-					orClause[key].val = v;
+			// it doesn't seem the mquery/mongoose supports subsequent gt,lt,
+			// gte,lte,ne filtering for or queries, however prior to v0.2.16 of
+			// mongoose-middleware some features were built as though it was
+			// supported. this will give us some indication if any code remains
+			// that tries to use these filtering options
+			return {
+				gt : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support gt');
 				},
-				gte : function (v) {
-					orClause[key].expr = 'gte';
-					orClause[key].val = v;
+				gte : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support gte');
 				},
-				lt : function (v) {
-					orClause[key].expr = 'lt';
-					orClause[key].val = v;
+				lt : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support lt');
 				},
-				lte : function (v) {
-					orClause[key].expr = 'lte';
-					orClause[key].val = v;
+				lte : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support lte');
 				},
-				ne : function (v) {
-					orClause[key].expr = 'ne';
-					orClause[key].val = v;
+				ne : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support ne');
 				}
-			};*/
+			};
 		};
 
 		mongoose.Query.prototype.where = function (key, val) {
