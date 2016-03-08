@@ -1,3 +1,7 @@
+# v0.2.16 / 2016-03-07
+
+* mondern versions of mongoose expect the skip parameter to be an int.
+
 # v0.2.15 / 2016-03-04
 
 * Fixed issue where there was an incompatibility with mquery module in mongoose
