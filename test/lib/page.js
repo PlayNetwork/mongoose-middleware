@@ -175,4 +175,78 @@ describe('page', function () {
 				return done();
 			});
 	});
+
+	it('should return results when start is a string', function (done) {
+		var options = {
+			start : "0",
+			count : 100
+		};
+
+		pageLib.initialize({ maxDocs: 50 });
+
+		Kitteh
+			.find()
+			.page(options, function (err, data) {
+				should.not.exist(err);
+				should.exist(data);
+
+				return done();
+			});
+	});
+
+	it('should return results when start is NaN', function (done) {
+		var options = {
+			start : "start",
+			count : 100
+		};
+
+		pageLib.initialize({ maxDocs: 50 });
+
+		Kitteh
+			.find()
+			.page(options, function (err, data) {
+				should.not.exist(err);
+				should.exist(data);
+
+				return done();
+			});
+	});
+
+	it('should return results when count is a string', function (done) {
+		var options = {
+			start : 0,
+			count : "100"
+		};
+
+		pageLib.initialize({ maxDocs: 50 });
+
+		Kitteh
+			.find()
+			.page(options, function (err, data) {
+				should.not.exist(err);
+				should.exist(data);
+
+				return done();
+			});
+	});
+
+	it('should return results when count is NaN', function (done) {
+		var options = {
+			start : 0,
+			count : "count"
+		};
+
+		pageLib.initialize({ maxDocs: 50 });
+
+		Kitteh
+			.find()
+			.page(options, function (err, data) {
+				should.not.exist(err);
+				should.exist(data);
+
+				data.options.count.should.equals(50);
+
+				return done();
+			});
+	});
 });

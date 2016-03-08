@@ -28,38 +28,48 @@ describe('filter', function () {
 	before(function () {
 		filterLib = require('../../lib/filter')(mongoose);
 
-		mongoose.Query.prototype.or = function (key, val) {
-			if (typeof val === 'undefined') {
-				val = { expr : '', val : null };
+		mongoose.Query.prototype.or = function (orOptions) {
+
+			if (Array.isArray(orOptions)) {
+				orOptions.forEach(function (elem) {
+					for (var x in elem) {
+						if (elem.hasOwnProperty(x)) {
+							if (orClause[x]) {
+								var newVal = [orClause[x], elem[x]];
+								orClause[x] = newVal;
+							} else {
+								orClause[x] = elem[x];
+							}
+						}
+					}
+				});
 			}
 
-			if (orClause[key]) {
-				var newVal = [orClause[key], val];
-				orClause[key] = newVal;
-			} else {
-				orClause[key] = val;
-			}
-
+			// it doesn't seem the mquery/mongoose supports subsequent gt,lt,
+			// gte,lte,ne filtering for or queries, however prior to v0.2.16 of
+			// mongoose-middleware some features were built as though it was
+			// supported. this will give us some indication if any code remains
+			// that tries to use these filtering options
 			return {
-				gt : function (v) {
-					orClause[key].expr = 'gt';
-					orClause[key].val = v;
+				gt : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support gt');
 				},
-				gte : function (v) {
-					orClause[key].expr = 'gte';
-					orClause[key].val = v;
+				gte : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support gte');
 				},
-				lt : function (v) {
-					orClause[key].expr = 'lt';
-					orClause[key].val = v;
+				lt : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support lt');
 				},
-				lte : function (v) {
-					orClause[key].expr = 'lte';
-					orClause[key].val = v;
+				lte : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support lte');
 				},
-				ne : function (v) {
-					orClause[key].expr = 'ne';
-					orClause[key].val = v;
+				ne : function () {
+					throw new Error(
+						'mongoose.Query.prototype.or does not support ne');
 				}
 			};
 		};

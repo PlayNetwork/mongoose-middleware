@@ -193,10 +193,14 @@ KittehModel
 
 Filters can be used in three ways: mandatory, optional and keyword searches. Additionally, for mandatory and optional searches, exact, contains and startsWith string pattern matches may be used.
 
+The following filters can be used for *mandatory*, *optional*, and *keyword* searches.
+
 * `exact` - Matches the string letter for letter, but is not case sensitive
 * `contains` - Matches documents where the string exists as a substring of the field (similar to a where field like '%term%' query in a relational datastore)
 * `startsWith` - Matches documents where field begins with the string supplied (similar to a where field like 'term%' query in a relational datastore)
 * `endsWith` - Matches documents where field ends with the string supplied (similar to a where field like '%term' query in a relational datastore)
+
+The following filters can *ONLY* be used for *mandatory* and *keyword* searches.
 * `greaterThan` (or `gt`) - Matches documents where field value is greater than supplied number or Date value in query
 * `greaterThanEqual` (or `gte`) - Matches documents where field value is greater than or equal to supplied number or Date value in query
 * `lessThan` (or `lt`) - Matches documents where field value is less than supplied number or Date value in query
