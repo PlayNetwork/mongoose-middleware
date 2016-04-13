@@ -530,7 +530,6 @@ describe('filter', function () {
 			whereClause.breed[0].test('shorthair').should.equals(true);
 			whereClause.breed[1].test('manx').should.equals(true);
 		});
-
 	});
 
 	describe('optional filters', function () {
