@@ -1,3 +1,7 @@
+# v0.2.18 / 2016-04-13
+
+* Adding support for `exists` mandatory filters
+
 # v0.2.17 / 2016-03-07
 
 * fix bug were not supplying `optional` search options would cause an exception
