@@ -87,6 +87,10 @@ describe('filter', function () {
 			}
 
 			return {
+				exists : function (v) {
+					whereClause[key].expr = 'exists';
+					whereClause[key].val = v;
+				},
 				gt : function (v) {
 					whereClause[key].expr = 'gt';
 					whereClause[key].val = v;
@@ -277,6 +281,27 @@ describe('filter', function () {
 			should.exist(whereClause.id);
 			whereClause.id.should.equals(12345);
 		});
+
+		it('should look for occurrences where given field exists when using exists', function () {
+			var options = {
+				filters : {
+					mandatory : {
+						exists : {
+							name : true
+						}
+					}
+				}
+			};
+
+			var query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.name);
+			whereClause.name.val.should.equals(true);
+		});
+
 
 		it ('should properly apply where clause when using greaterThan filter', function () {
 			var options = {
