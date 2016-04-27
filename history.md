@@ -1,3 +1,8 @@
+# v0.2.19 / 2016-04-27
+
+* addressed an issue that certain strings were incorrectly parsed as legitimate
+numbers and caused filters with EXACT phrases would fail
+
 # v0.2.18 / 2016-04-13
 
 * Adding support for `exists` mandatory filters
