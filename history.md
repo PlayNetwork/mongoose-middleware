@@ -1,3 +1,8 @@
+# v0.2.20 / 2016-05-16
+
+* added new function to intelligently merge filters for when you want to
+programmatically add new filters.
+
 # v0.2.19 / 2016-04-27
 
 * addressed an issue that certain strings were incorrectly parsed as legitimate
