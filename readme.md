@@ -385,6 +385,56 @@ Pagination returns the specified start, count and overall total numer of matchin
 }
 ```
 
+## Utility Methods
+
+### mergeFilters
+
+mongoose-middleware provides a helper function if you need to programmatically
+add filters to the query. It will intelligently merge structures, and ensure
+that elements are turned into Arrays when they need to be.
+
+#### Example
+
+```Javascript
+var base = {
+		filters : {
+			mandatory : {
+				exact : {
+					breed : ['manx', 'siamese', 'tabby'],
+					name : 'Ballard'
+				}
+			}
+		}
+	},
+	model = {
+		filters : {
+			mandatory : {
+				exact : {
+					breed : 'calico',
+					name : 'Fremont'
+				}
+			}
+		}
+	},
+	merged = require('mongoose-middleware').mergeFilters(base, model);
+```
+
+#### Result
+
+```Javascript
+{
+	filters : {
+		mandatory : {
+			exact : {
+				breed : ['manx', 'siamese', 'tabby', 'calico'],
+				name : ['Ballard', 'Fremont']
+			}
+		}
+	}
+}
+```
+
+
 ## License
 
 MIT Style
