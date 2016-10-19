@@ -29,7 +29,8 @@ Optionally configure max documents for pagination:
 ```javascript
 var mongoose = require('mongoose');
 
-require('mongoose-middleware').initialize({
+require('mongoose-middleware')
+  .initialize({
     maxDocs : 1000
   }, mongoose);
 ```
@@ -173,11 +174,11 @@ The options submitted to the `page(options, callback)` middleware method are ech
 The maxDocs property may optionally be specified on initialize to ensure no more than the specified number of documents are ever returned from a query. Please note that this does not affect the ability for the component to return the correct total count of results when using the pagination middleware function.
 
 ```javascript
-var
-  mongoose = require('mongoose'),
-  require('mongoose-middleware').initialize({
-    maxDocs : 1000
-  }, mongoose);
+var mongoose = require('mongoose');
+
+require('mongoose-middleware').initialize({
+  maxDocs : 1000
+}, mongoose);
 ```
 
 ### Projection (Field Filters)
