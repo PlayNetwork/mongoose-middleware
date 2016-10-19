@@ -8,16 +8,17 @@
 * Filtering (mandatory matches, optional matches and keyword search)
 * Sorting (ascending and descending)
 * Projection (response field filtering)
+* Promise support
 
 ## Install
 
-```Javascript
+```javascript
 npm install mongoose-middleware
 ```
 
 Then, simply require the library and pass in the instance of the `require('mongoose')` statement to the initialize method as follows:
 
-```Javascript
+```javascript
 var mongoose = require('mongoose');
 
 require('mongoose-middleware').initialize(mongoose);
@@ -25,14 +26,14 @@ require('mongoose-middleware').initialize(mongoose);
 
 Optionally configure max documents for pagination:
 
-```Javascript
+```javascript
 var mongoose = require('mongoose');
 
-require('mongoose-middleware').initialize({
-		maxDocs : 1000
-	}, mongoose);
+require('mongoose-middleware')
+  .initialize({
+    maxDocs : 1000
+  }, mongoose);
 ```
-
 
 ## Overview
 
@@ -40,109 +41,129 @@ This project aims to make basic searching, sorting, filtering and projection tas
 
 The following example shows usage of field projections, mandatory and optional search filters, sorting and pagination.
 
-```Javascript
+```javascript
 var
-	mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	KittehModel = mongoose.model(
-		'kittehs',
-		new Schema({
-			birthday : { type : Date, default : Date.now },
-			features : {
-				color : String,
-				isFurreh : Boolean
-			},
-			home : String,
-			name : String,
-			peePatches : [String]
-		})
-	);
+  mongoose = require('mongoose'),
+  Schema = mongoose.Schema,
+  KittehModel = mongoose.model(
+    'kittehs',
+    new Schema({
+      birthday : { type : Date, default : Date.now },
+      features : {
+        color : String,
+        isFurreh : Boolean
+      },
+      home : String,
+      name : String,
+      peePatches : [String]
+    })
+  );
 
 require('mongoose-middleware').initialize(mongoose);
 
 /*
-	Retrieve the name, home and features.color of kittehs that live in Seattle,
-	that are named "Hamish" and that are brindle, black or white in color and born
-	prior to January 1st, 2014. The results should be sorted by birthday in
-	descending order and name in ascending order.
+  Retrieve the name, home and features.color of kittehs that live in Seattle,
+  that are named "Hamish" and that are brindle, black or white in color and born
+  prior to January 1st, 2014. The results should be sorted by birthday in
+  descending order and name in ascending order.
 */
 var options = {
-	filters : {
-		field : ['name', 'home', 'features.color'],
-		mandatory : {
-			contains : {
-				home : 'seattle'
-			},
-			exact : {
-				name : 'Hamish'
-			},
-			lessThan : {
-				birthday : new Date(2014, 1, 1)
-			}
-		},
-		optional : {
-			contains : {
-				'features.color' : ['brindle', 'black', 'white']
-			}
-		}
-	},
-	sort : {
-		desc : 'birthday',
-		asc : 'name'
-	},
-	start : 0,
-	count : 500
+  filters : {
+    field : ['name', 'home', 'features.color'],
+    mandatory : {
+      contains : {
+        home : 'seattle'
+      },
+      exact : {
+        name : 'Hamish'
+      },
+      lessThan : {
+        birthday : new Date(2014, 1, 1)
+      }
+    },
+    optional : {
+      contains : {
+        'features.color' : ['brindle', 'black', 'white']
+      }
+    }
+  },
+  sort : {
+    desc : 'birthday',
+    asc : 'name'
+  },
+  start : 0,
+  count : 500
 };
 
 KittehModel
-	.find()
-	.field(options)
-	.keyword(options)
-	.filter(options)
-	.order(options)
-	.page(options,
-		function (err, kittehs) {
-			if (!err) {
-				console.log('we haz kittehs!');
-				console.log(kittehs);
-			} else {
-				console.log(err);
-			}
-		});
+  .find()
+  .field(options)
+  .keyword(options)
+  .filter(options)
+  .order(options)
+  .page(options,
+    function (err, kittehs) {
+      if (!err) {
+        console.log('we haz kittehs!');
+        console.log(kittehs);
+      } else {
+        console.log(err);
+      }
+    });
+```
+
+### Promise Support
+
+When using `mongoose-middleware`, the library does not interfere with existing [Mongoose support for Promises](http://mongoosejs.com/docs/promises.html). The [`#page`](#pagination) method will return a native Promise if the `callback` argument is not specified.
+
+```javascript
+var options = {
+  start : 0,
+  count : 500
+};
+
+KittehModel
+  .find()
+  .page(options)
+  .then((kittehs) => {
+    console.log('we haz kittehs!');
+    console.log(kittehs);
+  })
+  .catch(console.error);
 ```
 
 ### Results
 
 The options submitted to the `page(options, callback)` middleware method are echoed back in the response along with the results of the query and the total count of results matching the specified filters.
 
-```Javascript
+```javascript
 {
-	options : {
-		count : 500,
-		filters : {
-			field : ['name', 'home', 'features.color'],
-			mandatory : {
-				contains : {
-					'features.color' : ['brindle', 'black', 'white']
-				},
-				exact : {
-					name : 'Hamish'
-				}
-			},
-			optional : {
-				contains : {
-					home : 'seattle'
-				}
-			}
-		},
-		sort : {
-			desc : 'birthday',
-			asc : 'name'
-		},
-		start : 0
-	},
-	results : [ ... ], // the first 500 brindled, black or white kittehs named Hamish in Seattle
-	total : 734
+  options : {
+    count : 500,
+    filters : {
+      field : ['name', 'home', 'features.color'],
+      mandatory : {
+        contains : {
+          'features.color' : ['brindle', 'black', 'white']
+        },
+        exact : {
+          name : 'Hamish'
+        }
+      },
+      optional : {
+        contains : {
+          home : 'seattle'
+        }
+      }
+    },
+    sort : {
+      desc : 'birthday',
+      asc : 'name'
+    },
+    start : 0
+  },
+  results : [ ... ], // the first 500 brindled, black or white kittehs named Hamish in Seattle
+  total : 734
 }
 ```
 
@@ -152,41 +173,40 @@ The options submitted to the `page(options, callback)` middleware method are ech
 
 The maxDocs property may optionally be specified on initialize to ensure no more than the specified number of documents are ever returned from a query. Please note that this does not affect the ability for the component to return the correct total count of results when using the pagination middleware function.
 
-```Javascript
-var mongoose = require('mongoose'),
+```javascript
+var mongoose = require('mongoose');
+
 require('mongoose-middleware').initialize({
-		maxDocs : 1000
-	}, mongoose);
+  maxDocs : 1000
+}, mongoose);
 ```
 
 ### Projection (Field Filters)
 
 In order specify specific fields from a document in Mongo to be returned, the fields filter may be used.
 
-```Javascript
-
+```javascript
 var options = {
-	filters : {
-		field : ['name', 'home', 'qualities.demeanor']
-	}
+  filters : {
+    field : ['name', 'home', 'qualities.demeanor']
+  }
 };
 
 KittehModel
-	.find()
-	.field(options)
-	.exec(function (err, results) {
-		// work with response...
-	});
-
+  .find()
+  .field(options)
+  .exec(function (err, results) {
+    // work with response...
+  });
 ```
 
 Alternatively, a single field can be specified (not in an array):
 
-```Javascript
+```javascript
 KittehModel
-	.find()
-	.field({ filters : { field : '_id' } })
-	.exec(callback);
+  .find()
+  .field({ filters : { field : '_id' } })
+  .exec(callback);
 ```
 
 ### Filters
@@ -215,23 +235,23 @@ Mandatory filters require that the document matches the specified search options
 
 Optional searches allow you to specify more than one filter that you would like to match results for. This type of search is great for cases where you need to find documents that either match "this" *OR* "that". As an example, image you are searching for cats that are either manx, siamese or tabby, you would configure the filter as follows:
 
-```Javascript
+```javascript
 var options = {
-	filters : {
-		optional : {
-			exact : {
-				breed : ['manx', 'siamese', 'tabby']
-			}
-		}
-	}
+  filters : {
+    optional : {
+      exact : {
+        breed : ['manx', 'siamese', 'tabby']
+      }
+    }
+  }
 };
 
 KittehModel
-	.find()
-	.filter(options)
-	.exec(function (err, results) {
-		// work with response...
-	});
+  .find()
+  .filter(options)
+  .exec(function (err, results) {
+    // work with response...
+  });
 ```
 
 #### Keyword
@@ -240,34 +260,34 @@ Keyword searches provide a convenient way to search more than one field with a s
 
 The following query will search for documents where the name, description or knownAliases contain Heathcliff the Cat. If the name (or description and knownAliases) contains "Cat, the Heathcliff", "the Cat, Heathcliff", "Heathcliff Cat, the" and "the Heathcliff Cat", those results will also be returned.
 
-```Javascript
+```javascript
 var options = {
-	filters : {
-		keyword : {
-			fields : ['name', 'description', 'knownAliases'],
-			term : 'Heathcliff the Cat'
-		}
-	}
+  filters : {
+    keyword : {
+      fields : ['name', 'description', 'knownAliases'],
+      term : 'Heathcliff the Cat'
+    }
+  }
 };
 
 KittehModel
-	.find()
-	.filter(options)
-	.exec(function (err, results) {
-		// work with response...
-	});
+  .find()
+  .filter(options)
+  .exec(function (err, results) {
+    // work with response...
+  });
 ```
 
 If you would like to ensure that matches of "Heathcliff the Cat" in that exact format are returned, simply enclose the term in quotes:
 
-```Javascript
+```javascript
 var options = {
-	filters : {
-		keyword : {
-			fields : ['name', 'description', 'knownAliases'],
-			term : '"Heathcliff the Cat"'
-		}
-	}
+  filters : {
+    keyword : {
+      fields : ['name', 'description', 'knownAliases'],
+      term : '"Heathcliff the Cat"'
+    }
+  }
 };
 ```
 
@@ -277,56 +297,56 @@ Sorting, at this point, is fairly basic. All descending sorts will be applied pr
 
 #### Descending
 
-```Javascript
+```javascript
 var options = {
-	sort : {
-		desc : ['name', 'description', 'knownAliases']
-	}
+  sort : {
+    desc : ['name', 'description', 'knownAliases']
+  }
 };
 
 KittehModel
-	.find()
-	.order(options)
-	.exec(function (err, results) {
-		// work with response...
-	});
+  .find()
+  .order(options)
+  .exec(function (err, results) {
+    // work with response...
+  });
 ```
 
 You may also specify a single field (not an array) for both descending and ascending sorts:
 
-```Javascript
+```javascript
 var options = {
-	sort : {
-		desc : 'birthday'
-	}
+  sort : {
+    desc : 'birthday'
+  }
 };
 ```
 
 #### Ascending
 
-```Javascript
+```javascript
 var options = {
-	sort : {
-		asc : ['name', 'description', 'knownAliases']
-	}
+  sort : {
+    asc : ['name', 'description', 'knownAliases']
+  }
 };
 
 KittehModel
-	.find()
-	.order(options)
-	.exec(function (err, results) {
-		// work with response...
-	});
+  .find()
+  .order(options)
+  .exec(function (err, results) {
+    // work with response...
+  });
 ```
 
 You may also specify ascending and descending sorts together:
 
-```Javascript
+```javascript
 var options = {
-	sort : {
-		asc : 'name'
-		desc : ['birthday', 'home']
-	}
+  sort : {
+    asc : 'name'
+    desc : ['birthday', 'home']
+  }
 };
 ```
 
@@ -334,38 +354,38 @@ var options = {
 
 Pagination is performed by swapping the `exec()` function of Mongoose with `page()`. Pagination may be specified as follows:
 
-```Javascript
+```javascript
 var options = {
-	start : 0,
-	count : 100
+  start : 0,
+  count : 100
 };
 
 KittehModel
-	.find()
-	.page(options, function (err, results) {
-		// work with response...
-	});
+  .find()
+  .page(options, function (err, results) {
+    // work with response...
+  });
 ```
 
 When using pagination, maxDocs may specified via the `initialize()` function of the library which will result in no more than that maximum number of documents being returned.
 
-```Javascript
+```javascript
 var
-	mongoose = require('mongoose'),
-	KittehModel = require('./models/kitteh');
+  mongoose = require('mongoose'),
+  KittehModel = require('./models/kitteh');
 
 require('mongoose-middleware').initialize({ maxDocs : 50 }, mongoose);
 
 var options = {
-	start : 0,
-	count : 100
+  start : 0,
+  count : 100
 };
 
 KittehModel
-	.find()
-	.page(options, function (err, results) {
-		// results.options.count === 50
-	});
+  .find()
+  .page(options, function (err, results) {
+    // results.options.count === 50
+  });
 ```
 
 *Please note*: While the maxDocs will limit the number of returned documents, it will not affect the total count value of matching documents.
@@ -374,14 +394,14 @@ KittehModel
 
 Pagination returns the specified start, count and overall total numer of matching documents as a wrapper to the results from Mongo.
 
-```Javascript
+```javascript
 {
-	options : {
-		count : 50,
-		start : 0
-	},
-	results : [ ... ],
-	total : 734
+  options : {
+    count : 50,
+    start : 0
+  },
+  results : [ ... ],
+  total : 734
 }
 ```
 
@@ -395,42 +415,42 @@ that elements are turned into Arrays when they need to be.
 
 #### Example
 
-```Javascript
+```javascript
 var base = {
-		filters : {
-			mandatory : {
-				exact : {
-					breed : ['manx', 'siamese', 'tabby'],
-					name : 'Ballard'
-				}
-			}
-		}
-	},
-	model = {
-		filters : {
-			mandatory : {
-				exact : {
-					breed : 'calico',
-					name : 'Fremont'
-				}
-			}
-		}
-	},
-	merged = require('mongoose-middleware').mergeFilters(base, model);
+    filters : {
+      mandatory : {
+        exact : {
+          breed : ['manx', 'siamese', 'tabby'],
+          name : 'Ballard'
+        }
+      }
+    }
+  },
+  model = {
+    filters : {
+      mandatory : {
+        exact : {
+          breed : 'calico',
+          name : 'Fremont'
+        }
+      }
+    }
+  },
+  merged = require('mongoose-middleware').mergeFilters(base, model);
 ```
 
 #### Result
 
-```Javascript
+```javascript
 {
-	filters : {
-		mandatory : {
-			exact : {
-				breed : ['manx', 'siamese', 'tabby', 'calico'],
-				name : ['Ballard', 'Fremont']
-			}
-		}
-	}
+  filters : {
+    mandatory : {
+      exact : {
+        breed : ['manx', 'siamese', 'tabby', 'calico'],
+        name : ['Ballard', 'Fremont']
+      }
+    }
+  }
 }
 ```
 

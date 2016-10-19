@@ -249,4 +249,28 @@ describe('page', function () {
 				return done();
 			});
 	});
+
+	it('should return a Promise when callback is not specified', function (done) {
+		var options = {
+			start : 0,
+			count : 50
+		};
+
+		pageLib.initialize({ maxDocs : -1 });
+
+		Kitteh
+			.find()
+			.page(options)
+			.then(function (data) {
+				should.exist(data);
+
+				data.options.start.should.equals(0);
+				data.options.count.should.equals(50);
+				data.results.should.be.empty;
+				data.total.should.equals(total);
+
+				return done();
+			})
+			.catch(done);
+	});
 });

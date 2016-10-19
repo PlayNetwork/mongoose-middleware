@@ -27,6 +27,7 @@
 		"chai" : true,
 		"describe" : true,
 		"it" : true,
+		"Promise" : true,
 		"should" : true
 	}
 }

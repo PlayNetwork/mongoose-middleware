@@ -55,13 +55,15 @@ describe('utils', function () {
 			},
 			merged = utils.mergeFilters(base, model);
 
+		should.exist(merged);
+
 		merged.filter.mandatory.exact.deviceId.should.be.an('Array');
 		merged.filter.mandatory.exact.deviceId.length.should.equal(2);
 
 		merged.filter.optional.exact.deviceId.should.equal('100010001002');
 
 		merged.filter.mandatory.contains.deviceId.should.be.an('Array');
-		merged.filter.mandatory.contains.deviceId.length.should.equal(2)
+		merged.filter.mandatory.contains.deviceId.length.should.equal(2);
 
 		merged.filter.mandatory.startsWith.deviceId.should.be.an('Array');
 		merged.filter.mandatory.startsWith.deviceId.length.should.equal(2);
