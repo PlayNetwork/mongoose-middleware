@@ -1,6 +1,7 @@
 # v0.3.0 / 2016-10-19
 
 * Introduced fix for keyword filter where empty values caused a runtime exception (#33)
+* Introduced support for Promises (#26)
 
 # v0.2.20 / 2016-05-16
 
