@@ -1,11 +1,15 @@
+# v0.3.0 / 2016-10-19
+
+* Introduced fix for keyword filter where empty values caused a runtime exception (#33)
+
 # v0.2.20 / 2016-05-16
 
-* added new function to intelligently merge filters for when you want to
+* Added new function to intelligently merge filters for when you want to
 programmatically add new filters.
 
 # v0.2.19 / 2016-04-27
 
-* addressed an issue that certain strings were incorrectly parsed as legitimate
+* Addressed an issue that certain strings were incorrectly parsed as legitimate
 numbers and caused filters with EXACT phrases would fail
 
 # v0.2.18 / 2016-04-13

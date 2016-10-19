@@ -63,6 +63,24 @@ describe('keyword', function () {
 		orClauseItems.should.have.length(0);
 	});
 
+	it ('should not filter if there is no term specified', function () {
+		var options = {
+			filters : {
+				keyword : {
+					fields : null,
+					term : ''
+				}
+			}
+		};
+
+		var query = Kitteh
+			.find()
+			.keyword(options);
+
+		should.exist(query);
+		orClauseItems.should.have.length(0);
+	});
+
 	it ('should apply search of keyword to specified fields', function () {
 		var options = {
 			filters : {
