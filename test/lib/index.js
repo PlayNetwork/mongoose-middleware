@@ -119,10 +119,7 @@ describe('index', function () {
 					}
 				}
 			},
-			sort : {
-				desc : 'birthday',
-				asc : 'name'
-			},
+			sort: ['-birthday', 'name'],
 			start : 0,
 			count : 500
 		};

@@ -48,9 +48,7 @@ describe('order', function () {
 
 	it ('should sort fields in descending order when supplied', function () {
 		var options = {
-			sort : {
-				desc : 'name'
-			}
+			sort : '-name'
 		};
 
 		Kitteh
@@ -63,8 +61,23 @@ describe('order', function () {
 
 	it ('should sort fields in descending order when an array is supplied', function () {
 		var options = {
+			sort : ['-name', '-birthday']
+		};
+
+		Kitteh
+			.find()
+			.order(options);
+
+		sortClauseItems.should.have.length(2);
+		sortClauseItems[0].name.should.equals(-1);
+		sortClauseItems[1].birthday.should.equals(-1);
+	});
+
+	it ('should sort fields in descending order when an object is supplied', function () {
+		var options = {
 			sort : {
-				desc : ['name', 'birthday']
+				'name': -1,
+				'birthday': -1
 			}
 		};
 
@@ -79,9 +92,7 @@ describe('order', function () {
 
 	it ('should sort fields in ascending order when supplied', function () {
 		var options = {
-			sort : {
-				asc : 'name'
-			}
+			sort : ['name']
 		};
 
 		Kitteh
@@ -94,8 +105,23 @@ describe('order', function () {
 
 	it ('should sort fields in ascending order when an array is supplied', function () {
 		var options = {
+			sort : ['name', 'birthday']
+		};
+
+		Kitteh
+			.find()
+			.order(options);
+
+		sortClauseItems.should.have.length(2);
+		sortClauseItems[0].name.should.equals(1);
+		sortClauseItems[1].birthday.should.equals(1);
+	});
+
+	it ('should sort fields in ascending order when an object is supplied', function () {
+		var options = {
 			sort : {
-				asc : ['name', 'birthday']
+				'name': 1,
+				'birthday': 1
 			}
 		};
 
@@ -108,11 +134,39 @@ describe('order', function () {
 		sortClauseItems[1].birthday.should.equals(1);
 	});
 
-	it ('should sort fields in both ascending and descending order when supplied', function () {
+	it ('should sort fields in both ascending and descending order when supplied as a string', function () {
+		var options = {
+			sort : 'home, -name'
+		};
+
+		Kitteh
+			.find()
+			.order(options);
+
+		sortClauseItems.should.have.length(2);
+		sortClauseItems[0].home.should.equals(1);
+		sortClauseItems[1].name.should.equals(-1);
+	});
+
+	it ('should sort fields in both ascending and descending order when supplied as an array', function () {
+		var options = {
+			sort : ['home', '-name']
+		};
+
+		Kitteh
+			.find()
+			.order(options);
+
+		sortClauseItems.should.have.length(2);
+		sortClauseItems[0].home.should.equals(1);
+		sortClauseItems[1].name.should.equals(-1);
+	});
+
+	it ('should sort fields in both ascending and descending order when supplied as an object', function () {
 		var options = {
 			sort : {
-				asc : ['home'],
-				desc : ['name']
+				'home': 1,
+				'name': -1
 			}
 		};
 
@@ -121,7 +175,8 @@ describe('order', function () {
 			.order(options);
 
 		sortClauseItems.should.have.length(2);
-		sortClauseItems[0].name.should.equals(-1);
-		sortClauseItems[1].home.should.equals(1);
+		sortClauseItems[0].home.should.equals(1);
+		sortClauseItems[1].name.should.equals(-1);
 	});
+
 });
