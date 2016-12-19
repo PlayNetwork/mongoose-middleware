@@ -316,7 +316,7 @@ var options = {
 var options = {
   sort : {
     'name': -1,
-    'description': -1
+    'description': 1
   }
 };
 ```
