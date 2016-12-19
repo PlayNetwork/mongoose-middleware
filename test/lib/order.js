@@ -179,4 +179,21 @@ describe('order', function () {
 		sortClauseItems[1].name.should.equals(-1);
 	});
 
+	it ('should sort fields in default ascending order when values in supplied object are not valid numbers', function () {
+		var options = {
+			sort : {
+				'home': 1,
+				'name': 'invalid number'
+			}
+		};
+
+		Kitteh 
+			.find()
+			.order(options);
+
+		sortClauseItems.should.have.length(2);
+		sortClauseItems[0].home.should.equals(1);
+		sortClauseItems[1].name.should.equals(1);
+	});
+
 });
