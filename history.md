@@ -1,3 +1,7 @@
+# v1.0.0 / 2016-12-19
+
+* Refactoring sort using JSON API spec
+
 # v0.3.0 / 2016-10-19
 
 * Introduced fix for keyword filter where empty values caused a runtime exception (#33)

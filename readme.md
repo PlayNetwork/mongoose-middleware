@@ -87,10 +87,7 @@ var options = {
       }
     }
   },
-  sort : {
-    desc : 'birthday',
-    asc : 'name'
-  },
+  sort : ['-birthday', 'name'],
   start : 0,
   count : 500
 };
@@ -156,10 +153,7 @@ The options submitted to the `page(options, callback)` middleware method are ech
         }
       }
     },
-    sort : {
-      desc : 'birthday',
-      asc : 'name'
-    },
+    sort : ['-birthday', 'name'],
     start : 0
   },
   results : [ ... ], // the first 500 brindled, black or white kittehs named Hamish in Seattle
@@ -293,15 +287,13 @@ var options = {
 
 ### Sorting
 
-Sorting, at this point, is fairly basic. All descending sorts will be applied prior to ascending sorts when specifying multiple sorts of each direction.
+Sorting, at this point, is fairly basic. All descending sorts will be applied prior to ascending sorts when specifying multiple sorts of each direction. Supports JSON API specs.
 
 #### Descending
 
 ```javascript
 var options = {
-  sort : {
-    desc : ['name', 'description', 'knownAliases']
-  }
+  sort : ['-name', '-description', '-knownAliases']
 };
 
 KittehModel
@@ -312,12 +304,19 @@ KittehModel
   });
 ```
 
-You may also specify a single field (not an array) for both descending and ascending sorts:
+You may also specify a single field (not an array) as well as an object for both descending and ascending sorts:
+
+```javascript
+var options = {
+  sort : '-name'
+};
+```
 
 ```javascript
 var options = {
   sort : {
-    desc : 'birthday'
+    'name': -1,
+    'description': 1
   }
 };
 ```
@@ -326,9 +325,7 @@ var options = {
 
 ```javascript
 var options = {
-  sort : {
-    asc : ['name', 'description', 'knownAliases']
-  }
+  sort : ['name', 'description', 'knownAliases']
 };
 
 KittehModel
@@ -343,10 +340,7 @@ You may also specify ascending and descending sorts together:
 
 ```javascript
 var options = {
-  sort : {
-    asc : 'name'
-    desc : ['birthday', 'home']
-  }
+  sort : ['name', '-birthday', '-home']
 };
 ```
 
