@@ -1,7 +1,7 @@
 {
   "name": "mongoose-middleware",
   "description": "Middleware for mongoose that makes filtering, sorting, pagination and projection chainable and simple to apply",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "scripts": {
     "test": "gulp test-all"
   },

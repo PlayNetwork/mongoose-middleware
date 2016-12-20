@@ -1,6 +1,6 @@
 # v1.0.0 / 2016-12-19
 
-* Refactoring sort using JSON API spec
+* Refactored sort parameter to comply with JSON API spec
 
 # v0.3.0 / 2016-10-19
 
