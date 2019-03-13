@@ -1,6 +1,4 @@
 language: node_js
 node_js:
-    - 4
-    - 6
-after_success:
-  - gulp coveralls
+    - 8
+    - 10

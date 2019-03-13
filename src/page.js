@@ -1,40 +1,40 @@
-module.exports = function(mongoose) {
-	'use strict';
-
-	var
+export default (mongoose) => {
+	let
 		maxDocs = -1,
 		self = {};
 
-	function page (options, query) {
+	function page (query, options) {
 		return new Promise(function (resolve, reject) {
 			return query.model.count(query._conditions, function (err, total) {
 				if (err) {
 					return reject(err);
 				}
 
-				return query
-					.skip(options.start)
-					.limit(options.count)
-					.exec(function (err, results) {
-						if (err) {
-							return reject(err);
-						}
+				query.setOptions({
+					limit : options.count,
+					skip : options.start
+				});
 
-						return resolve({
-							options : options,
-							results : results || [],
-							total : total
-						});
+				return query.exec((err, results) => {
+					if (err) {
+						return reject(err);
+					}
+
+					return resolve({
+						options,
+						results : results || [],
+						total
 					});
+				});
 			});
 		});
 	}
 
 	mongoose.Query.prototype.page = function (options, callback) {
-		var
+		let
 			defaults = {
-				start : 0,
-				count : maxDocs
+				count : maxDocs,
+				start : 0
 			},
 			query = this;
 
@@ -49,11 +49,11 @@ module.exports = function(mongoose) {
 
 		// if no callback is supplied, return a Promise
 		if (typeof callback === 'undefined') {
-			return page(options, query);
+			return page(query, options);
 		}
 
 		// execute and utilize the callback
-		return page(options, query)
+		return page(query, options)
 			.then(function (result) {
 				return callback(null, result);
 			})
@@ -62,7 +62,7 @@ module.exports = function(mongoose) {
 			});
 	};
 
-	self.initialize = function (options) {
+	self.initialize = (options) => {
 		if (options) {
 			maxDocs = options.maxDocs || maxDocs;
 		}

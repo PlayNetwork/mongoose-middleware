@@ -1,90 +1,90 @@
-var
-	chai = require('chai'),
-	should = chai.should();
+/* eslint no-invalid-this : 0 */
+/* eslint no-magic-numbers : 0 */
+import chai from 'chai';
+import indexLib from '../../src/index';
+import mongoose from 'mongoose';
 
+const should = chai.should();
 
-describe('index', function () {
-	'use strict';
-
-	var
+describe('index', () => {
+	let
 		fieldsSelected = [],
-		indexLib = null,
-		mongoose = require('mongoose'),
+		Kitteh = mongoose.model('kittehs-index', new mongoose.Schema({
+			birthday : {
+				default : Date.now,
+				type : Date
+			},
+			features : {
+				color : String,
+				isFurreh : Boolean
+			},
+			home : String,
+			isDead: Boolean,
+			name : String,
+			peePatches : [String]
+		})),
 		orClauseItems = [],
 		sortClauseItems = [],
 		whereClause = {};
 
-	var Kitteh = mongoose.model('kittehs-index', new mongoose.Schema({
-		birthday : { type : Date, default : Date.now },
-		features : {
-			color : String,
-			isFurreh : Boolean
-		},
-		isDead: Boolean,
-		home : String,
-		name : String,
-		peePatches : [String]
-	}));
-
-	before(function () {
-		indexLib = require('../../lib/index');
+	before(() => {
 		indexLib.initialize(mongoose);
 
-		Kitteh.count = function (search, countCallback) {
+		Kitteh.count = (search, countCallback) => {
 			countCallback(null, 0);
 		};
 
-		mongoose.Query.prototype.exec = function (findCallback) {
+		mongoose.Query.prototype.exec = (findCallback) => {
 			findCallback(null, []);
 		};
 
-		mongoose.Query.prototype.limit = function () {
+		mongoose.Query.prototype.limit = () => {
 			return this;
 		};
 
-		mongoose.Query.prototype.select = function (field) {
+		mongoose.Query.prototype.select = (field) => {
 			if (field) {
 				fieldsSelected.push(field);
 			}
 		};
 
-		mongoose.Query.prototype.skip = function () {
+		mongoose.Query.prototype.skip = () => {
 			return this;
 		};
 
-		mongoose.Query.prototype.or = function (clause) {
+		mongoose.Query.prototype.or = (clause) => {
 			if (clause) {
 				orClauseItems.push(clause);
 			}
 		};
 
-		mongoose.Query.prototype.sort = function (clause) {
+		mongoose.Query.prototype.sort = (clause) => {
 			if (clause) {
 				sortClauseItems.push(clause);
 			}
 		};
 
-		mongoose.Query.prototype.where = function (key) {
+		mongoose.Query.prototype.where = (key) => {
 			return {
-				regex : function (value) {
+				equals : (value) => {
 					whereClause[key] = value;
 				},
-				equals : function (value) {
+				regex : (value) => {
 					whereClause[key] = value;
 				}
 			};
 		};
 	});
 
-	beforeEach(function () {
+	beforeEach(() => {
 		fieldsSelected = [];
 		orClauseItems = [];
 		sortClauseItems = [];
 		whereClause = {};
 	});
 
-	it('should properly initialize options', function (done) {
-		var options = {
+	it('should properly initialize options', (done) => {
+		let options = {
 			maxDocs : 1000
 		};
 
@@ -92,7 +92,7 @@ describe('index', function () {
 
 		Kitteh
 			.find()
-			.page(null, function (err, data) {
+			.page(null, (err, data) => {
 				should.not.exist(err);
 				should.exist(data);
 				data.options.count.should.equals(1000);
@@ -101,8 +101,9 @@ describe('index', function () {
 			});
 	});
 
-	it('should properly require all middleware components', function (done) {
-		var options = {
+	it('should properly require all middleware components', (done) => {
+		let options = {
+			count : 500,
 			filters : {
 				field : ['name', 'home', 'features.color'],
 				mandatory : {
@@ -120,8 +121,7 @@ describe('index', function () {
 				}
 			},
 			sort: ['-birthday', 'name'],
-			start : 0,
-			count : 500
+			start : 0
 		};
 
 		Kitteh
@@ -130,7 +130,7 @@ describe('index', function () {
 			.filter(options)
 			.keyword(options)
 			.order(options)
-			.page(options, function (err, data) {
+			.page(options, (err, data) => {
 				should.not.exist(err);
 				should.exist(data);
 

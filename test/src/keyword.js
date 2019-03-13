@@ -1,52 +1,52 @@
-var
-	chai = require('chai'),
-	should = chai.should();
+/* eslint no-magic-numbers : 0 */
+import chai from 'chai';
+import keywordLib from '../../src/keyword';
+import mongoose from 'mongoose';
 
+const should = chai.should();
 
-describe('keyword', function () {
-	'use strict';
-
-	var
-		keywordLib = null,
-		mongoose = require('mongoose'),
+describe('keyword', () => {
+	let
+		Kitteh = mongoose.model('kittehs-keyword', new mongoose.Schema({
+			birthday : {
+				default : Date.now,
+				type : Date
+			},
+			features : {
+				color : String,
+				isFurreh : Boolean
+			},
+			home : String,
+			isDead: Boolean,
+			name : String,
+			peePatches : [String]
+		})),
 		orClauseItems = [];
 
-	var Kitteh = mongoose.model('kittehs-keyword', new mongoose.Schema({
-		birthday : { type : Date, default : Date.now },
-		features : {
-			color : String,
-			isFurreh : Boolean
-		},
-		isDead: Boolean,
-		home : String,
-		name : String,
-		peePatches : [String]
-	}));
+	before(() => {
+		keywordLib(mongoose);
 
-	before(function () {
-		keywordLib = require('../../lib/keyword')(mongoose);
-
-		mongoose.Query.prototype.or = function (clause) {
+		mongoose.Query.prototype.or = (clause) => {
 			if (clause) {
 				orClauseItems.push(clause);
 			}
 		};
 	});
 
-	beforeEach(function () {
+	beforeEach(() => {
 		orClauseItems = [];
 	});
 
-	it ('should return a query when created', function () {
-		var query = Kitteh
+	it ('should return a query when created', () => {
+		let query = Kitteh
 			.find()
 			.keyword(null);
 
 		(query instanceof mongoose.Query).should.equals(true);
 	});
 
-	it ('should not filter if there are no fields specified', function () {
-		var options = {
+	it ('should not filter if there are no fields specified', () => {
+		let options = {
 			filters : {
 				keyword : {
 					fields : null,
@@ -55,7 +55,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = Kitteh
+		let query = Kitteh
 			.find()
 			.keyword(options);
 
@@ -63,8 +63,8 @@ describe('keyword', function () {
 		orClauseItems.should.have.length(0);
 	});
 
-	it ('should not filter if there is no term specified', function () {
-		var options = {
+	it ('should not filter if there is no term specified', () => {
+		let options = {
 			filters : {
 				keyword : {
 					fields : null,
@@ -73,7 +73,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = Kitteh
+		let query = Kitteh
 			.find()
 			.keyword(options);
 
@@ -81,8 +81,8 @@ describe('keyword', function () {
 		orClauseItems.should.have.length(0);
 	});
 
-	it ('should apply search of keyword to specified fields', function () {
-		var options = {
+	it ('should apply search of keyword to specified fields', () => {
+		let options = {
 			filters : {
 				keyword : {
 					fields : ['name', 'features.color', 'home'],
@@ -91,7 +91,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = Kitteh
+		let query = Kitteh
 			.find()
 			.keyword(options);
 
@@ -101,8 +101,8 @@ describe('keyword', function () {
 		orClauseItems[0][0].name.test('spec-cat-acular').should.equals(true);
 	});
 
-	it ('should search matches in arrays when a property within a schema is an array', function () {
-		var options = {
+	it ('should search matches in arrays when a property within a schema is an array', () => {
+		let options = {
 			filters : {
 				keyword : {
 					fields : ['name', 'peePatches'],
@@ -111,7 +111,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = Kitteh
+		let query = Kitteh
 			.find()
 			.keyword(options);
 
@@ -120,8 +120,8 @@ describe('keyword', function () {
 		should.exist(orClauseItems[0][1].peePatches.$in);
 	});
 
-	it ('should search for keyword occurrences with multiple words', function () {
-		var options = {
+	it ('should search for keyword occurrences with multiple words', () => {
+		let options = {
 			filters : {
 				keyword : {
 					fields : ['name', 'features.color', 'home'],
@@ -130,7 +130,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = Kitteh
+		let query = Kitteh
 			.find()
 			.keyword(options);
 
@@ -141,8 +141,8 @@ describe('keyword', function () {
 		orClauseItems[0][0].name.test('ceilings are not for cats').should.equals(true);
 	});
 
-	it ('should search for exact match of multiple word keywords enclosed in quotes', function () {
-		var options = {
+	it ('should search for exact match of multiple word keywords enclosed in quotes', () => {
+		let options = {
 			filters : {
 				keyword : {
 					fields : ['name', 'features.color', 'home'],
@@ -151,7 +151,7 @@ describe('keyword', function () {
 			}
 		};
 
-		var query = Kitteh
+		let query = Kitteh
 			.find()
 			.keyword(options);
 
