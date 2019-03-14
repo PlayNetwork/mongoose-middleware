@@ -26,72 +26,44 @@ export default (mongoose) => {
 		return val;
 	}
 
-	function applyExists (query, spec) {
-		if (!spec) {
-			return;
-		}
-
-		Object.getOwnPropertyNames(spec).forEach((key) => {
+	function applyExists (query, spec = {}) {
+		Object.keys(spec).forEach((key) => {
 			query.where(key).exists(analyzeWhereSpec(spec[key]));
 		});
 	}
 
-	function applyGreaterThan (query, spec) {
-		if (!spec) {
-			return;
-		}
-
-		Object.getOwnPropertyNames(spec).forEach((key) => {
+	function applyGreaterThan (query, spec = {}) {
+		Object.keys(spec).forEach((key) => {
 			query.where(key).gt(spec[key]);
 		});
 	}
 
-	function applyGreaterThanEqual (query, spec) {
-		if (!spec) {
-			return;
-		}
-
-		Object.getOwnPropertyNames(spec).forEach((key) => {
+	function applyGreaterThanEqual (query, spec = {}) {
+		Object.keys(spec).forEach((key) => {
 			query.where(key).gte(spec[key]);
 		});
 	}
 
-	function applyLesserThan (query, spec) {
-		if (!spec) {
-			return;
-		}
-
-		Object.getOwnPropertyNames(spec).forEach((key) => {
+	function applyLesserThan (query, spec = {}) {
+		Object.keys(spec).forEach((key) => {
 			query.where(key).lt(spec[key]);
 		});
 	}
 
-	function applyLesserThanEqual (query, spec) {
-		if (!spec) {
-			return;
-		}
-
-		Object.getOwnPropertyNames(spec).forEach((key) => {
+	function applyLesserThanEqual (query, spec = {}) {
+		Object.keys(spec).forEach((key) => {
 			query.where(key).lte(spec[key]);
 		});
 	}
 
-	function applyNotEqual (query, spec) {
-		if (!spec) {
-			return;
-		}
-
-		Object.getOwnPropertyNames(spec).forEach((key) => {
+	function applyNotEqual (query, spec = {}) {
+		Object.keys(spec).forEach((key) => {
 			query.where(key).ne(analyzeWhereSpec(spec[key]));
 		});
 	}
 
-	function applyRegex (query, spec, buildRegex) {
-		if (!spec) {
-			return;
-		}
-
-		Object.getOwnPropertyNames(spec).forEach((key) => {
+	function applyRegex (query, spec = {}, buildRegex) {
+		Object.keys(spec).forEach((key) => {
 			let val = buildRegex(spec[key]);
 			if (Array.isArray(val)) {
 				val.forEach((term) => {
@@ -103,16 +75,12 @@ export default (mongoose) => {
 		});
 	}
 
-	function applyRegexAsOptional (query, spec, buildRegex) {
-		if (!spec) {
-			return;
-		}
-
+	function applyRegexAsOptional (query, spec = {}, buildRegex) {
 		let
 			orOptions = [],
 			orOptionsNode = {};
 
-		Object.getOwnPropertyNames(spec).forEach((key) => {
+		Object.keys(spec).forEach((key) => {
 			let val = buildRegex(spec[key]);
 
 			if (Array.isArray(val)) {
