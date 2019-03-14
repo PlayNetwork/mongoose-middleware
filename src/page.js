@@ -5,7 +5,7 @@ export default (mongoose) => {
 
 	function page (query, options) {
 		return new Promise(function (resolve, reject) {
-			return query.model.count(query._conditions, function (err, total) {
+			return query.model.estimatedDocumentCount(query._conditions, function (err, total) {
 				if (err) {
 					return reject(err);
 				}

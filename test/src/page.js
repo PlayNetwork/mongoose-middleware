@@ -31,7 +31,7 @@ describe('page', () => {
 	before(() => {
 		pageLib(mongoose);
 
-		Kitteh.count = (search, countCallback) => {
+		Kitteh.estimatedDocumentCount = (search, countCallback) => {
 			countCallback(countError, total);
 		};
 

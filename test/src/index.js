@@ -30,7 +30,7 @@ describe('index', () => {
 	before(() => {
 		indexLib.initialize(mongoose);
 
-		Kitteh.count = (search, countCallback) => {
+		Kitteh.estimatedDocumentCount = (search, countCallback) => {
 			countCallback(null, 0);
 		};
 
