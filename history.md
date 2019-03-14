@@ -1,3 +1,9 @@
+# v2.0.0 / 2019-03-13
+
+* Modified to support ES6
+* Removed jshint and replaced with eslint
+* Adjusted to support Mongoose v5.x
+
 # v1.0.0 / 2016-12-19
 
 * Refactored sort parameter to comply with JSON API spec

@@ -1,50 +1,49 @@
-var
-	chai = require('chai'),
-	should = chai.should();
+import chai from 'chai';
+import utils from '../../src/utils';
 
-describe('utils', function () {
-	'use strict';
+const should = chai.should();
 
-	var utils = require('../../lib/utils')();
-
-	it('should do things', function () {
-		var base = {
+describe('utils', () => {
+	it('should do things', () => {
+		let
+			base = {
 				filter : {
 					mandatory : {
-						exact : {
-							deviceId : '100010001000'
-						},
 						contains : {
 							deviceId : ['100010001002']
-						},
-						startsWith : {
-							deviceId : ['100010001003']
 						},
 						endsWith : {
 							deviceId : '100010001006'
 						},
+						exact : {
+							deviceId : '100010001000'
+						},
 						ne : {
 							deviceId : '100010001007'
+						},
+						startsWith : {
+							deviceId : ['100010001003']
 						}
 					}
 				}
 			},
+			merged,
 			model = {
 				filter : {
 					mandatory : {
-						exact : {
-							deviceId : '100010001001'
-						},
 						contains : {
 							deviceId : ['100010001003']
-						},
-						startsWith : {
-							deviceId : '100010001004'
 						},
 						endsWith : {
 							deviceId : ['100010001005']
 						},
-						ne : 'testbrokenstring'
+						exact : {
+							deviceId : '100010001001'
+						},
+						ne : 'testbrokenstring',
+						startsWith : {
+							deviceId : '100010001004'
+						}
 					},
 					optional : {
 						exact : {
@@ -52,8 +51,9 @@ describe('utils', function () {
 						}
 					}
 				}
-			},
-			merged = utils.mergeFilters(base, model);
+			};
+
+		merged = utils.mergeFilters(base, model);
 
 		should.exist(merged);
 

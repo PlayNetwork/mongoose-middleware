@@ -1,13 +1,10 @@
-module.exports = function(mongoose) {
-	'use strict';
-
-	var
+export default (mongoose) => {
+	const
 		Query = mongoose.Query,
 		Schema = mongoose.Schema;
 
-
-	function getKeywordRegex(term) {
-		var
+	function getKeywordRegex (term) {
+		let
 			matches = [],
 			pattern = '';
 
@@ -16,7 +13,7 @@ module.exports = function(mongoose) {
 
 		// fix for #33 - empty keywords cause exception
 		if (matches) {
-			matches.forEach(function (t) {
+			matches.forEach((t) => {
 				// remove quotes
 				t = t.replace(/\"/g, '');
 
@@ -40,22 +37,22 @@ module.exports = function(mongoose) {
 			return this;
 		}
 
-		var
+		let
 			fields = options.filters.keyword.fields || [],
 			find = null,
 			or = [],
+			query = this,
 			re = null,
-			self = this,
 			term = options.filters.keyword.term || '';
 
 		if (!fields.length || term === '') {
-			return self;
+			return query;
 		}
 
 		re = new RegExp(getKeywordRegex(term), 'i');
-		fields.forEach(function (field) {
+		fields.forEach((field) => {
 			// field is an Array; use $in to incorperate keyword for search
-			if (self.model.schema.path(field) && self.model.schema.path(field) instanceof Schema.Types.Array) {
+			if (query.model.schema.path(field) && query.model.schema.path(field) instanceof Schema.Types.Array) {
 				find = {};
 				find[field] = {};
 				find[field].$in = [re];
@@ -67,8 +64,8 @@ module.exports = function(mongoose) {
 			}
 		});
 
-		self.or(or);
+		query.or(or);
 
-		return self;
+		return query;
 	};
 };

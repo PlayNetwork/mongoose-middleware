@@ -1,41 +1,40 @@
-var
-	chai = require('chai'),
-	should = chai.should();
+/* eslint no-magic-numbers : 0 */
+import chai from 'chai';
+import filterLib from '../../src/filter';
+import mongoose from 'mongoose';
 
+const should = chai.should();
 
-describe('filter', function () {
-	'use strict';
-
-	var
-		filterLib = null,
-		mongoose = require('mongoose'),
+describe('filter', () => {
+	let
+		Kitteh = mongoose.model('kittehs-filter', new mongoose.Schema({
+			birthday : {
+				default : Date.now,
+				type : Date
+			},
+			features : {
+				color : String,
+				isFurreh : Boolean
+			},
+			home : String,
+			isDead: Boolean,
+			name : String,
+			peePatches : [String]
+		})),
 		orClause = {},
 		whereClause = {};
 
-	var Kitteh = mongoose.model('kittehs-filter', new mongoose.Schema({
-		birthday : { type : Date, default : Date.now },
-		features : {
-			color : String,
-			isFurreh : Boolean
-		},
-		id : Number,
-		isDead: Boolean,
-		home : String,
-		name : String,
-		peePatches : [String]
-	}));
+	before(() => {
+		filterLib(mongoose);
 
-	before(function () {
-		filterLib = require('../../lib/filter')(mongoose);
-
-		mongoose.Query.prototype.or = function (orOptions) {
+		mongoose.Query.prototype.or = (orOptions) => {
 
 			if (Array.isArray(orOptions)) {
-				orOptions.forEach(function (elem) {
-					for (var x in elem) {
+				orOptions.forEach((elem) => {
+					for (let x in elem) {
 						if (elem.hasOwnProperty(x)) {
 							if (orClause[x]) {
-								var newVal = [orClause[x], elem[x]];
+								let newVal = [orClause[x], elem[x]];
 								orClause[x] = newVal;
 							} else {
 								orClause[x] = elem[x];
@@ -51,63 +50,63 @@ describe('filter', function () {
 			// supported. this will give us some indication if any code remains
 			// that tries to use these filtering options
 			return {
-				gt : function () {
+				gt : () => {
 					throw new Error(
 						'mongoose.Query.prototype.or does not support gt');
 				},
-				gte : function () {
+				gte : () => {
 					throw new Error(
 						'mongoose.Query.prototype.or does not support gte');
 				},
-				lt : function () {
+				lt : () => {
 					throw new Error(
 						'mongoose.Query.prototype.or does not support lt');
 				},
-				lte : function () {
+				lte : () => {
 					throw new Error(
 						'mongoose.Query.prototype.or does not support lte');
 				},
-				ne : function () {
+				ne : () => {
 					throw new Error(
 						'mongoose.Query.prototype.or does not support ne');
 				}
 			};
 		};
 
-		mongoose.Query.prototype.where = function (key, val) {
+		mongoose.Query.prototype.where = (key, val) => {
 			if (typeof val === 'undefined') {
 				val = { expr : '', val : null };
 			}
 
 			if (whereClause[key]) {
-				var newVal = [whereClause[key], val];
+				let newVal = [whereClause[key], val];
 				whereClause[key] = newVal;
 			} else {
 				whereClause[key] = val;
 			}
 
 			return {
-				exists : function (v) {
+				exists : (v) => {
 					whereClause[key].expr = 'exists';
 					whereClause[key].val = v;
 				},
-				gt : function (v) {
+				gt : (v) => {
 					whereClause[key].expr = 'gt';
 					whereClause[key].val = v;
 				},
-				gte : function (v) {
+				gte : (v) => {
 					whereClause[key].expr = 'gte';
 					whereClause[key].val = v;
 				},
-				lt : function (v) {
+				lt : (v) => {
 					whereClause[key].expr = 'lt';
 					whereClause[key].val = v;
 				},
-				lte : function (v) {
+				lte : (v) => {
 					whereClause[key].expr = 'lte';
 					whereClause[key].val = v;
 				},
-				ne : function (v) {
+				ne : (v) => {
 					whereClause[key].expr = 'ne';
 					whereClause[key].val = v;
 				}
@@ -115,21 +114,21 @@ describe('filter', function () {
 		};
 	});
 
-	beforeEach(function () {
+	beforeEach(() => {
 		orClause = {};
 		whereClause = {};
 	});
 
-	it ('should return a query when created', function () {
-		var query = Kitteh
+	it ('should return a query when created', () => {
+		let query = Kitteh
 			.find()
 			.filter(null);
 
 		(query instanceof mongoose.Query).should.equals(true);
 	});
 
-	it ('should apply both mandatory and optional filters when both are supplied', function () {
-		var options = {
+	it ('should apply both mandatory and optional filters when both are supplied', () => {
+		let options = {
 			filters : {
 				mandatory : {
 					contains : {
@@ -144,7 +143,7 @@ describe('filter', function () {
 			}
 		};
 
-		var query = Kitteh
+		let query = Kitteh
 			.find()
 			.filter(options);
 
@@ -153,9 +152,9 @@ describe('filter', function () {
 		should.exist(orClause['features.color']);
 	});
 
-	describe('mandatory filters', function () {
-		it ('should look for occurrences of a term within a string using contains', function () {
-			var options = {
+	describe('mandatory filters', () => {
+		it ('should look for occurrences of a term within a string using contains', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						contains : {
@@ -165,7 +164,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -176,8 +175,8 @@ describe('filter', function () {
 			whereClause.name.test('dog').should.equals(false);
 		});
 
-		it ('should look for occurrences of a term at the start of a string using endsWith', function () {
-			var options = {
+		it ('should look for occurrences of a term at the start of a string using endsWith', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						endsWith : {
@@ -187,7 +186,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -198,8 +197,8 @@ describe('filter', function () {
 			whereClause.name.test('this cat is sick').should.equals(false);
 		});
 
-		it ('should look for occurrences of a term at the start of a string using startsWith', function () {
-			var options = {
+		it ('should look for occurrences of a term at the start of a string using startsWith', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						startsWith : {
@@ -209,7 +208,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -220,8 +219,8 @@ describe('filter', function () {
 			whereClause.name.test('this cat is sick').should.equals(false);
 		});
 
-		it ('should look for occurrences of an exact match of the term when using exact', function () {
-			var options = {
+		it ('should look for occurrences of an exact match of the term when using exact', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						exact : {
@@ -231,7 +230,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -242,8 +241,8 @@ describe('filter', function () {
 			whereClause.name.test('the cat').should.equals(false);
 		});
 
-		it ('should look for occurrences of an exact match of the object when using exact', function () {
-			var options = {
+		it ('should look for occurrences of an exact match of the object when using exact', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						exact : {
@@ -253,7 +252,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -262,8 +261,8 @@ describe('filter', function () {
 			whereClause.isDead.should.equals(false);
 		});
 
-		it ('should look for occurrences of an exact match of a number when using exact', function () {
-			var options = {
+		it ('should look for occurrences of an exact match of a number when using exact', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						exact : {
@@ -273,7 +272,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -282,8 +281,8 @@ describe('filter', function () {
 			whereClause.id.should.equals(12345);
 		});
 
-		it('should look for occurrences where given field exists when using exists', function () {
-			var options = {
+		it('should look for occurrences where given field exists when using exists', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						exists : {
@@ -293,7 +292,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -303,8 +302,8 @@ describe('filter', function () {
 		});
 
 
-		it ('should properly apply where clause when using greaterThan filter', function () {
-			var options = {
+		it ('should properly apply where clause when using greaterThan filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						greaterThan : {
@@ -314,7 +313,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -323,8 +322,8 @@ describe('filter', function () {
 			whereClause.birthday.expr.should.equal('gt');
 		});
 
-		it ('should properly apply where clause when using gt filter', function () {
-			var options = {
+		it ('should properly apply where clause when using gt filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						gt : {
@@ -334,7 +333,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -343,8 +342,8 @@ describe('filter', function () {
 			whereClause.birthday.expr.should.equal('gt');
 		});
 
-		it ('should properly apply where clause when using greaterThanEqual filter', function () {
-			var options = {
+		it ('should properly apply where clause when using greaterThanEqual filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						greaterThanEqual : {
@@ -354,7 +353,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -363,8 +362,8 @@ describe('filter', function () {
 			whereClause.birthday.expr.should.equal('gte');
 		});
 
-		it ('should properly apply where clause when using gte filter', function () {
-			var options = {
+		it ('should properly apply where clause when using gte filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						gte : {
@@ -374,7 +373,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -383,8 +382,8 @@ describe('filter', function () {
 			whereClause.birthday.expr.should.equal('gte');
 		});
 
-		it ('should properly apply where clause when using lessThan filter', function () {
-			var options = {
+		it ('should properly apply where clause when using lessThan filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						lessThan : {
@@ -394,7 +393,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -403,8 +402,8 @@ describe('filter', function () {
 			whereClause.birthday.expr.should.equal('lt');
 		});
 
-		it ('should properly apply where clause when using lt filter', function () {
-			var options = {
+		it ('should properly apply where clause when using lt filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						lt : {
@@ -414,7 +413,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -423,8 +422,8 @@ describe('filter', function () {
 			whereClause.birthday.expr.should.equal('lt');
 		});
 
-		it ('should properly apply where clause when using lessThanEqual filter', function () {
-			var options = {
+		it ('should properly apply where clause when using lessThanEqual filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						lessThanEqual : {
@@ -434,7 +433,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -443,8 +442,8 @@ describe('filter', function () {
 			whereClause.birthday.expr.should.equal('lte');
 		});
 
-		it ('should properly apply where clause when using lte filter', function () {
-			var options = {
+		it ('should properly apply where clause when using lte filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						lte : {
@@ -454,7 +453,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -463,8 +462,8 @@ describe('filter', function () {
 			whereClause.birthday.expr.should.equal('lte');
 		});
 
-		it ('should properly apply where clause when using notEqual filter', function () {
-			var options = {
+		it ('should properly apply where clause when using notEqual filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						notEqual : {
@@ -474,7 +473,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -483,8 +482,8 @@ describe('filter', function () {
 			whereClause.name.expr.should.equal('ne');
 		});
 
-		it ('should properly apply where clause when using ne filter', function () {
-			var options = {
+		it ('should properly apply where clause when using ne filter', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						notEqual : {
@@ -494,7 +493,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -503,8 +502,8 @@ describe('filter', function () {
 			whereClause.name.expr.should.equal('ne');
 		});
 
-		it ('should look for multiple occurrences of a match when supplying an array', function () {
-			var options = {
+		it ('should look for multiple occurrences of a match when supplying an array', () => {
+			let options = {
 				filters : {
 					mandatory : {
 						endsWith : {
@@ -517,7 +516,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -532,9 +531,9 @@ describe('filter', function () {
 		});
 	});
 
-	describe('optional filters', function () {
-		it ('should look for occurrences of a term within a string using contains', function () {
-			var options = {
+	describe('optional filters', () => {
+		it ('should look for occurrences of a term within a string using contains', () => {
+			let options = {
 				filters : {
 					optional : {
 						contains : {
@@ -544,7 +543,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -555,8 +554,8 @@ describe('filter', function () {
 			orClause.name.test('dog').should.equals(false);
 		});
 
-		it ('should look for occurrences of a term at the start of a string using endsWith', function () {
-			var options = {
+		it ('should look for occurrences of a term at the start of a string using endsWith', () => {
+			let options = {
 				filters : {
 					optional : {
 						endsWith : {
@@ -566,7 +565,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -577,8 +576,8 @@ describe('filter', function () {
 			orClause.name.test('this cat is sick').should.equals(false);
 		});
 
-		it ('should look for occurrences of a term at the start of a string using startsWith', function () {
-			var options = {
+		it ('should look for occurrences of a term at the start of a string using startsWith', () => {
+			let options = {
 				filters : {
 					optional : {
 						startsWith : {
@@ -588,7 +587,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -599,8 +598,8 @@ describe('filter', function () {
 			orClause.name.test('this cat is sick').should.equals(false);
 		});
 
-		it ('should look for occurrences of an exact match of the term when using exact', function () {
-			var options = {
+		it ('should look for occurrences of an exact match of the term when using exact', () => {
+			let options = {
 				filters : {
 					optional : {
 						exact : {
@@ -610,7 +609,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -621,8 +620,8 @@ describe('filter', function () {
 			orClause.name.test('the cat').should.equals(false);
 		});
 
-		it ('should look for occurrences of an exact match of the object when using exact', function () {
-			var options = {
+		it ('should look for occurrences of an exact match of the object when using exact', () => {
+			let options = {
 				filters : {
 					optional : {
 						exact : {
@@ -632,7 +631,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -641,22 +640,22 @@ describe('filter', function () {
 			orClause.isDead.should.equals(true);
 		});
 
-		it ('should look for occurrences of an exact match of the object when using exact', function () {
-			var options = {
+		it ('should look for occurrences of an exact match of the object when using exact', () => {
+			let options = {
 				filters : {
 					optional : {
 						exact : {
+							doubleField : '99.99',
+							intField : '0100',
 							isAlive : 'true',
 							isDead : 'false',
-							randomField : 'null',
-							intField : '0100',
-							doubleField : '99.99'
+							randomField : 'null'
 						}
 					}
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
@@ -669,8 +668,8 @@ describe('filter', function () {
 			orClause.doubleField.should.equals(99.99);
 		});
 
-		it ('should look for multiple occurrences of a match when supplying an array', function () {
-			var options = {
+		it ('should look for multiple occurrences of a match when supplying an array', () => {
+			let options = {
 				filters : {
 					optional : {
 						exact : {
@@ -680,7 +679,7 @@ describe('filter', function () {
 				}
 			};
 
-			var query = Kitteh
+			let query = Kitteh
 				.find()
 				.filter(options);
 
