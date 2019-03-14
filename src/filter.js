@@ -27,99 +27,114 @@ export default (mongoose) => {
 	}
 
 	function applyExists (query, spec) {
-		for (let key in spec) {
-			if (spec.hasOwnProperty(key)) {
-				query.where(key).exists(analyzeWhereSpec(spec[key]));
-			}
+		if (!spec) {
+			return;
 		}
+
+		Object.getOwnPropertyNames(spec).forEach((key) => {
+			query.where(key).exists(analyzeWhereSpec(spec[key]));
+		});
 	}
 
 	function applyGreaterThan (query, spec) {
-		for (let key in spec) {
-			if (spec.hasOwnProperty(key)) {
-				query.where(key).gt(spec[key]);
-			}
+		if (!spec) {
+			return;
 		}
+
+		Object.getOwnPropertyNames(spec).forEach((key) => {
+			query.where(key).gt(spec[key]);
+		});
 	}
 
 	function applyGreaterThanEqual (query, spec) {
-		for (let key in spec) {
-			if (spec.hasOwnProperty(key)) {
-				query.where(key).gte(spec[key]);
-			}
+		if (!spec) {
+			return;
 		}
+
+		Object.getOwnPropertyNames(spec).forEach((key) => {
+			query.where(key).gte(spec[key]);
+		});
 	}
 
 	function applyLesserThan (query, spec) {
-		for (let key in spec) {
-			if (spec.hasOwnProperty(key)) {
-				query.where(key).lt(spec[key]);
-			}
+		if (!spec) {
+			return;
 		}
+
+		Object.getOwnPropertyNames(spec).forEach((key) => {
+			query.where(key).lt(spec[key]);
+		});
 	}
 
 	function applyLesserThanEqual (query, spec) {
-		for (let key in spec) {
-			if (spec.hasOwnProperty(key)) {
-				query.where(key).lte(spec[key]);
-			}
+		if (!spec) {
+			return;
 		}
+
+		Object.getOwnPropertyNames(spec).forEach((key) => {
+			query.where(key).lte(spec[key]);
+		});
 	}
 
 	function applyNotEqual (query, spec) {
-		for (let key in spec) {
-			if (spec.hasOwnProperty(key)) {
-				query.where(key).ne(analyzeWhereSpec(spec[key]));
-			}
+		if (!spec) {
+			return;
 		}
+
+		Object.getOwnPropertyNames(spec).forEach((key) => {
+			query.where(key).ne(analyzeWhereSpec(spec[key]));
+		});
 	}
 
 	function applyRegex (query, spec, buildRegex) {
-		for (let key in spec) {
-			if (spec.hasOwnProperty(key)) {
-				let val = buildRegex(spec[key]);
-
-				if (Array.isArray(val)) {
-					val.forEach((term) => {
-						query.where(key, term);
-					});
-				} else {
-					query.where(key, val);
-				}
-			}
+		if (!spec) {
+			return;
 		}
+
+		Object.getOwnPropertyNames(spec).forEach((key) => {
+			let val = buildRegex(spec[key]);
+			if (Array.isArray(val)) {
+				val.forEach((term) => {
+					query.where(key, term);
+				});
+			} else {
+				query.where(key, val);
+			}
+		});
 	}
 
 	function applyRegexAsOptional (query, spec, buildRegex) {
+		if (!spec) {
+			return;
+		}
+
 		let
 			orOptions = [],
 			orOptionsNode = {};
 
-		for (let key in spec) {
-			if (spec.hasOwnProperty(key)) {
-				let val = buildRegex(spec[key]);
+		Object.getOwnPropertyNames(spec).forEach((key) => {
+			let val = buildRegex(spec[key]);
 
-				if (Array.isArray(val)) {
-					orOptions = orOptions.concat((() => {
-						let
-							node = {},
-							nodeOptions = [];
+			if (Array.isArray(val)) {
+				orOptions = orOptions.concat((() => {
+					let
+						node = {},
+						nodeOptions = [];
 
-						val.forEach((term) => {
-							node = {};
-							node[key] = term;
-							nodeOptions.push(node);
-						});
+					val.forEach((term) => {
+						node = {};
+						node[key] = term;
+						nodeOptions.push(node);
+					});
 
-						return nodeOptions;
-					})());
-				} else {
-					orOptionsNode = {};
-					orOptionsNode[key] = val;
-					orOptions.push(orOptionsNode);
-				}
+					return nodeOptions;
+				})());
+			} else {
+				orOptionsNode = {};
+				orOptionsNode[key] = val;
+				orOptions.push(orOptionsNode);
 			}
-		}
+		});
 
 		if (orOptions.length > 0) {
 			query.or(orOptions);
