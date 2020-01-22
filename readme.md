@@ -205,10 +205,11 @@ KittehModel
 
 ### Filters
 
-Filters can be used in three ways: mandatory, optional and keyword searches. Additionally, for mandatory and optional searches, exact, contains and startsWith string pattern matches may be used.
+Filters can be used in three ways: mandatory, optional and keyword searches. Additionally, for mandatory and optional searches, exact, equals, contains and startsWith string pattern matches may be used.
 
 The following filters can be used for *mandatory*, *optional*, and *keyword* searches.
 
+* `equals` - Matches for string identity
 * `exact` - Matches the string letter for letter, but is not case sensitive
 * `contains` - Matches documents where the string exists as a substring of the field (similar to a where field like '%term%' query in a relational datastore)
 * `startsWith` - Matches documents where field begins with the string supplied (similar to a where field like 'term%' query in a relational datastore)

@@ -159,6 +159,18 @@ export default (mongoose) => {
 		return new RegExp('^' + sanitize(val), 'i');
 	}
 
+	function regexEquals (val) {
+		if (Array.isArray(val) && val.length) {
+			return val.map(function (term) {
+				return regexEquals(term);
+			});
+		}
+
+		val = analyzeWhereSpec(val);
+
+		return val;
+	}
+
 	function sanitize (str) {
 		// sanitizes regex escapes
 		return str.replace(/[\W\s]/ig, '\\$&');
@@ -178,6 +190,7 @@ export default (mongoose) => {
 		applyRegex(query, mandatory.contains, regexContains);
 		applyRegex(query, mandatory.endsWith, regexEndsWith);
 		applyRegex(query, mandatory.startsWith, regexStartsWith);
+		applyRegex(query, mandatory.equals, regexEquals);
 		applyRegex(query, mandatory.exact, regexExact);
 
 		applyExists(
@@ -203,6 +216,7 @@ export default (mongoose) => {
 		applyRegexAsOptional(query, optional.contains, regexContains);
 		applyRegexAsOptional(query, optional.endsWith, regexEndsWith);
 		applyRegexAsOptional(query, optional.startsWith, regexStartsWith);
+		applyRegexAsOptional(query, optional.equals, regexEquals);
 		applyRegexAsOptional(query, optional.exact, regexExact);
 
 		return query;
