@@ -241,6 +241,26 @@ describe('filter', () => {
 			whereClause.name.test('the cat').should.equals(false);
 		});
 
+		it ('should look for occurrences of an equals match of the term when using equals', () => {
+			let options = {
+				filters : {
+					mandatory : {
+						equals : {
+							name : 'cat'
+						}
+					}
+				}
+			};
+
+			let query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.name);
+			whereClause.name.should.equals('cat');
+		});
+
 		it ('should look for occurrences of an exact match of the object when using exact', () => {
 			let options = {
 				filters : {
@@ -668,6 +688,34 @@ describe('filter', () => {
 			orClause.doubleField.should.equals(99.99);
 		});
 
+		it ('should look for occurrences of an equals match of the object when using equals', () => {
+			let options = {
+				filters : {
+					optional : {
+						equals : {
+							doubleField : '99.99',
+							intField : '0100',
+							isAlive : 'true',
+							isDead : 'false',
+							randomField : 'null'
+						}
+					}
+				}
+			};
+
+			let query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(orClause.isDead);
+			orClause.isAlive.should.equals(true);
+			orClause.isDead.should.equals(false);
+			should.not.exist(orClause.randomField);
+			orClause.intField.should.equals(100);
+			orClause.doubleField.should.equals(99.99);
+		});
+
 		it ('should look for multiple occurrences of a match when supplying an array', () => {
 			let options = {
 				filters : {
@@ -687,6 +735,27 @@ describe('filter', () => {
 			should.exist(orClause.name);
 			orClause.name[0].test('cat').should.equals(true);
 			orClause.name[1].test('Kitteh').should.equals(true);
+		});
+
+		it ('should look for multiple occurrences of a equals match when supplying an array', () => {
+			let options = {
+				filters : {
+					optional : {
+						equals : {
+							name : ['cat', 'Kitteh']
+						}
+					}
+				}
+			};
+
+			let query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(orClause.name);
+			orClause.name[0].should.equals('cat');
+			orClause.name[1].should.equals('Kitteh');
 		});
 	});
 });
