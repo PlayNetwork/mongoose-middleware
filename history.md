@@ -1,3 +1,15 @@
+# v3.0.0 / 2020-01-19
+
+* Updated dependencies
+* Modified search response to use `data` instead of `results` for [jsonapi](https://jsonapi.org/format/#fetching-resources-responses) alignment
+* Modified `equals` implementation in filters to utilize the `Query.prototype.equals` method instead
+* Added support for all filters as optional
+
+# v2.0.1 / ???
+
+* Added support for `equals` to filters
+* Moved back to `countDocuments` from `estimatedDocumentCount` on `page` function
+
 # v2.0.0 / 2019-03-13
 
 * Modified to support ES6

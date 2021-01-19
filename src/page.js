@@ -21,8 +21,8 @@ export default (mongoose) => {
 					}
 
 					return resolve({
+						data : results || [],
 						options,
-						results : results || [],
 						total
 					});
 				});

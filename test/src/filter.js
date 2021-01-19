@@ -86,6 +86,10 @@ describe('filter', () => {
 			}
 
 			return {
+				equals : (v) => {
+					whereClause[key].expr = 'equals';
+					whereClause[key].val = v;
+				},
 				exists : (v) => {
 					whereClause[key].expr = 'exists';
 					whereClause[key].val = v;
@@ -98,6 +102,10 @@ describe('filter', () => {
 					whereClause[key].expr = 'gte';
 					whereClause[key].val = v;
 				},
+				in : (v) => {
+					whereClause[key].expr = 'in';
+					whereClause[key].val = v;
+				},
 				lt : (v) => {
 					whereClause[key].expr = 'lt';
 					whereClause[key].val = v;
@@ -108,6 +116,10 @@ describe('filter', () => {
 				},
 				ne : (v) => {
 					whereClause[key].expr = 'ne';
+					whereClause[key].val = v;
+				},
+				nin : (v) => {
+					whereClause[key].expr = 'nin';
 					whereClause[key].val = v;
 				}
 			};
@@ -241,26 +253,6 @@ describe('filter', () => {
 			whereClause.name.test('the cat').should.equals(false);
 		});
 
-		it ('should look for occurrences of an equals match of the term when using equals', () => {
-			let options = {
-				filters : {
-					mandatory : {
-						equals : {
-							name : 'cat'
-						}
-					}
-				}
-			};
-
-			let query = Kitteh
-				.find()
-				.filter(options);
-
-			should.exist(query);
-			should.exist(whereClause.name);
-			whereClause.name.should.equals('cat');
-		});
-
 		it ('should look for occurrences of an exact match of the object when using exact', () => {
 			let options = {
 				filters : {
@@ -301,6 +293,26 @@ describe('filter', () => {
 			whereClause.id.should.equals(12345);
 		});
 
+		it ('should properly apply where claus when using equals', () => {
+			let options = {
+				filters : {
+					mandatory : {
+						equals : {
+							name : 'cat'
+						}
+					}
+				}
+			};
+
+			let query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.name);
+			whereClause.name.val.should.equals('cat');
+		});
+
 		it('should look for occurrences where given field exists when using exists', () => {
 			let options = {
 				filters : {
@@ -320,7 +332,6 @@ describe('filter', () => {
 			should.exist(whereClause.name);
 			whereClause.name.val.should.equals(true);
 		});
-
 
 		it ('should properly apply where clause when using greaterThan filter', () => {
 			let options = {
@@ -400,6 +411,26 @@ describe('filter', () => {
 			should.exist(query);
 			should.exist(whereClause.birthday);
 			whereClause.birthday.expr.should.equal('gte');
+		});
+
+		it ('should properly apply where clause when using in filter', () => {
+			let options = {
+				filters : {
+					mandatory : {
+						in : {
+							tags : ['value 1', 'value 2', 'value 3']
+						}
+					}
+				}
+			};
+
+			let query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.tags);
+			whereClause.tags.expr.should.equal('in');
 		});
 
 		it ('should properly apply where clause when using lessThan filter', () => {
@@ -520,6 +551,46 @@ describe('filter', () => {
 			should.exist(query);
 			should.exist(whereClause.name);
 			whereClause.name.expr.should.equal('ne');
+		});
+
+		it ('should properly apply where clause when using nin filter', () => {
+			let options = {
+				filters : {
+					mandatory : {
+						nin : {
+							tags : ['value 1', 'value 2', 'value 3']
+						}
+					}
+				}
+			};
+
+			let query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.tags);
+			whereClause.tags.expr.should.equal('nin');
+		});
+
+		it ('should properly apply where clause when using notIn filter', () => {
+			let options = {
+				filters : {
+					mandatory : {
+						notIn : {
+							tags : ['value 1', 'value 2', 'value 3']
+						}
+					}
+				}
+			};
+
+			let query = Kitteh
+				.find()
+				.filter(options);
+
+			should.exist(query);
+			should.exist(whereClause.tags);
+			whereClause.tags.expr.should.equal('nin');
 		});
 
 		it ('should look for multiple occurrences of a match when supplying an array', () => {
@@ -688,34 +759,6 @@ describe('filter', () => {
 			orClause.doubleField.should.equals(99.99);
 		});
 
-		it ('should look for occurrences of an equals match of the object when using equals', () => {
-			let options = {
-				filters : {
-					optional : {
-						equals : {
-							doubleField : '99.99',
-							intField : '0100',
-							isAlive : 'true',
-							isDead : 'false',
-							randomField : 'null'
-						}
-					}
-				}
-			};
-
-			let query = Kitteh
-				.find()
-				.filter(options);
-
-			should.exist(query);
-			should.exist(orClause.isDead);
-			orClause.isAlive.should.equals(true);
-			orClause.isDead.should.equals(false);
-			should.not.exist(orClause.randomField);
-			orClause.intField.should.equals(100);
-			orClause.doubleField.should.equals(99.99);
-		});
-
 		it ('should look for multiple occurrences of a match when supplying an array', () => {
 			let options = {
 				filters : {
@@ -735,27 +778,6 @@ describe('filter', () => {
 			should.exist(orClause.name);
 			orClause.name[0].test('cat').should.equals(true);
 			orClause.name[1].test('Kitteh').should.equals(true);
-		});
-
-		it ('should look for multiple occurrences of a equals match when supplying an array', () => {
-			let options = {
-				filters : {
-					optional : {
-						equals : {
-							name : ['cat', 'Kitteh']
-						}
-					}
-				}
-			};
-
-			let query = Kitteh
-				.find()
-				.filter(options);
-
-			should.exist(query);
-			should.exist(orClause.name);
-			orClause.name[0].should.equals('cat');
-			orClause.name[1].should.equals('Kitteh');
 		});
 	});
 });
