@@ -146,7 +146,7 @@ describe('page', () => {
 
 				data.options.start.should.equals(0);
 				data.options.count.should.equals(50);
-				data.results.should.be.empty;
+				data.data.should.be.empty;
 				data.total.should.equals(total);
 
 				return done();
@@ -263,7 +263,7 @@ describe('page', () => {
 
 				data.options.start.should.equals(0);
 				data.options.count.should.equals(50);
-				data.results.should.be.empty;
+				data.data.should.be.empty;
 				data.total.should.equals(total);
 
 				return done();

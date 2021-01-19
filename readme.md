@@ -129,9 +129,9 @@ KittehModel
   .catch(console.error);
 ```
 
-### Results
+### Data
 
-The options submitted to the `page(options, callback)` middleware method are echoed back in the response along with the results of the query and the total count of results matching the specified filters.
+The options submitted to the `page(options, callback)` middleware method are echoed back in the response along with the results of the query and the total count of documents matching the specified filters.
 
 ```javascript
 {
@@ -156,7 +156,7 @@ The options submitted to the `page(options, callback)` middleware method are ech
     sort : ['-birthday', 'name'],
     start : 0
   },
-  results : [ ... ], // the first 500 brindled, black or white kittehs named Hamish in Seattle
+  data : [ ... ], // the first 500 brindled, black or white kittehs named Hamish in Seattle
   total : 734
 }
 ```
@@ -189,7 +189,7 @@ var options = {
 KittehModel
   .find()
   .field(options)
-  .exec(function (err, results) {
+  .exec(function (err, data) {
     // work with response...
   });
 ```
@@ -209,13 +209,14 @@ Filters can be used in three ways: mandatory, optional and keyword searches. Add
 
 The following filters can be used for *mandatory*, *optional*, and *keyword* searches.
 
-* `equals` - Matches for string identity
 * `exact` - Matches the string letter for letter, but is not case sensitive
 * `contains` - Matches documents where the string exists as a substring of the field (similar to a where field like '%term%' query in a relational datastore)
 * `startsWith` - Matches documents where field begins with the string supplied (similar to a where field like 'term%' query in a relational datastore)
 * `endsWith` - Matches documents where field ends with the string supplied (similar to a where field like '%term' query in a relational datastore)
 
 The following filters can *ONLY* be used for *mandatory* and *keyword* searches.
+
+* `equals` - Matches for string value
 * `greaterThan` (or `gt`) - Matches documents where field value is greater than supplied number or Date value in query
 * `greaterThanEqual` (or `gte`) - Matches documents where field value is greater than or equal to supplied number or Date value in query
 * `lessThan` (or `lt`) - Matches documents where field value is less than supplied number or Date value in query
@@ -244,7 +245,7 @@ var options = {
 KittehModel
   .find()
   .filter(options)
-  .exec(function (err, results) {
+  .exec(function (err, data) {
     // work with response...
   });
 ```
@@ -268,7 +269,7 @@ var options = {
 KittehModel
   .find()
   .filter(options)
-  .exec(function (err, results) {
+  .exec(function (err, data) {
     // work with response...
   });
 ```
@@ -300,7 +301,7 @@ var options = {
 KittehModel
   .find()
   .order(options)
-  .exec(function (err, results) {
+  .exec(function (err, data) {
     // work with response...
   });
 ```
@@ -332,7 +333,7 @@ var options = {
 KittehModel
   .find()
   .order(options)
-  .exec(function (err, results) {
+  .exec(function (err, data) {
     // work with response...
   });
 ```
@@ -357,7 +358,7 @@ var options = {
 
 KittehModel
   .find()
-  .page(options, function (err, results) {
+  .page(options, function (err, data) {
     // work with response...
   });
 ```
@@ -378,8 +379,8 @@ var options = {
 
 KittehModel
   .find()
-  .page(options, function (err, results) {
-    // results.options.count === 50
+  .page(options, function (err, data) {
+    // data.options.count === 50
   });
 ```
 
@@ -395,7 +396,7 @@ Pagination returns the specified start, count and overall total numer of matchin
     count : 50,
     start : 0
   },
-  results : [ ... ],
+  data : [ ... ],
   total : 734
 }
 ```

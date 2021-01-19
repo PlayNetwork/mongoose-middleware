@@ -26,6 +26,12 @@ export default (mongoose) => {
 		return val;
 	}
 
+	function applyEquals (query, spec = {}) {
+		Object.keys(spec).forEach((key) => {
+			query.where(key).equals(analyzeWhereSpec(spec[key]));
+		});
+	}
+
 	function applyExists (query, spec = {}) {
 		Object.keys(spec).forEach((key) => {
 			query.where(key).exists(analyzeWhereSpec(spec[key]));
@@ -44,6 +50,12 @@ export default (mongoose) => {
 		});
 	}
 
+	function applyIn (query, spec = {}) {
+		Object.keys(spec).forEach((key) => {
+			query.where(key).in(spec[key]);
+		});
+	}
+
 	function applyLesserThan (query, spec = {}) {
 		Object.keys(spec).forEach((key) => {
 			query.where(key).lt(spec[key]);
@@ -53,6 +65,12 @@ export default (mongoose) => {
 	function applyLesserThanEqual (query, spec = {}) {
 		Object.keys(spec).forEach((key) => {
 			query.where(key).lte(spec[key]);
+		});
+	}
+
+	function applyNotIn (query, spec = {}) {
+		Object.keys(spec).forEach((key) => {
+			query.where(key).nin(spec[key]);
 		});
 	}
 
@@ -159,18 +177,6 @@ export default (mongoose) => {
 		return new RegExp('^' + sanitize(val), 'i');
 	}
 
-	function regexEquals (val) {
-		if (Array.isArray(val) && val.length) {
-			return val.map(function (term) {
-				return regexEquals(term);
-			});
-		}
-
-		val = analyzeWhereSpec(val);
-
-		return val;
-	}
-
 	function sanitize (str) {
 		// sanitizes regex escapes
 		return str.replace(/[\W\s]/ig, '\\$&');
@@ -190,9 +196,11 @@ export default (mongoose) => {
 		applyRegex(query, mandatory.contains, regexContains);
 		applyRegex(query, mandatory.endsWith, regexEndsWith);
 		applyRegex(query, mandatory.startsWith, regexStartsWith);
-		applyRegex(query, mandatory.equals, regexEquals);
 		applyRegex(query, mandatory.exact, regexExact);
 
+		applyEquals(
+			query,
+			mandatory.equals || {});
 		applyExists(
 			query,
 			mandatory.exists || {});
@@ -202,12 +210,18 @@ export default (mongoose) => {
 		applyGreaterThanEqual(
 			query,
 			mandatory.greaterThanEqual || mandatory.gte || {});
+		applyIn(
+			query, 
+			mandatory.in || {});
 		applyLesserThan(
 			query,
 			mandatory.lessThan || mandatory.lt || {});
 		applyLesserThanEqual(
 			query,
 			mandatory.lessThanEqual || mandatory.lte || {});
+		applyNotIn(
+			query,
+			mandatory.notIn || mandatory.nin || {});
 		applyNotEqual(
 			query,
 			mandatory.notEqual || mandatory.notEqualTo || mandatory.ne || {});
@@ -216,7 +230,6 @@ export default (mongoose) => {
 		applyRegexAsOptional(query, optional.contains, regexContains);
 		applyRegexAsOptional(query, optional.endsWith, regexEndsWith);
 		applyRegexAsOptional(query, optional.startsWith, regexStartsWith);
-		applyRegexAsOptional(query, optional.equals, regexEquals);
 		applyRegexAsOptional(query, optional.exact, regexExact);
 
 		return query;
