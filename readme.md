@@ -1,6 +1,6 @@
 # Mongoose Middleware
 
-[![Build Status](https://secure.travis-ci.org/PlayNetwork/mongoose-middleware.png?branch=master)](https://travis-ci.org/brozeph/mongoose-middleware.svg?branch=main) [![Coverage Status](https://coveralls.io/repos/PlayNetwork/mongoose-middleware/badge.png)](https://coveralls.io/r/brozeph/mongoose-middleware)
+[![Build Status](https://secure.travis-ci.org/PlayNetwork/mongoose-middleware.png?branch=master)](https://travis-ci.org/brozeph/mongoose-middleware.svg?branch=main) [![![Coverage Status](https://coveralls.io/repos/github/brozeph/mongoose-middleware/badge.svg?branch=main)](https://coveralls.io/github/brozeph/mongoose-middleware?branch=main)
 
 ## Features
 
