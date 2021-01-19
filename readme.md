@@ -1,6 +1,6 @@
 # Mongoose Middleware
 
-[![Build Status](https://secure.travis-ci.org/PlayNetwork/mongoose-middleware.png?branch=master)](http://travis-ci.org/PlayNetwork/mongoose-middleware?branch=master) [![Coverage Status](https://coveralls.io/repos/PlayNetwork/mongoose-middleware/badge.png)](https://coveralls.io/r/PlayNetwork/mongoose-middleware)
+[![Build Status](https://secure.travis-ci.org/PlayNetwork/mongoose-middleware.png?branch=master)](https://travis-ci.org/brozeph/mongoose-middleware.svg?branch=main) [![Coverage Status](https://coveralls.io/repos/PlayNetwork/mongoose-middleware/badge.png)](https://coveralls.io/r/brozeph/mongoose-middleware)
 
 ## Features
 
@@ -13,23 +13,23 @@
 ## Install
 
 ```javascript
-npm install mongoose-middleware
+npm install @brozeph/mongoose-middleware
 ```
 
 Then, simply require the library and pass in the instance of the `require('mongoose')` statement to the initialize method as follows:
 
 ```javascript
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
-require('mongoose-middleware').initialize(mongoose);
+require('@brozeph/mongoose-middleware').initialize(mongoose);
 ```
 
 Optionally configure max documents for pagination:
 
 ```javascript
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
-require('mongoose-middleware')
+require('@brozeph/mongoose-middleware')
   .initialize({
     maxDocs : 1000
   }, mongoose);
@@ -42,7 +42,7 @@ This project aims to make basic searching, sorting, filtering and projection tas
 The following example shows usage of field projections, mandatory and optional search filters, sorting and pagination.
 
 ```javascript
-var
+const
   mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   KittehModel = mongoose.model(
@@ -59,7 +59,7 @@ var
     })
   );
 
-require('mongoose-middleware').initialize(mongoose);
+require('@brozeph/mongoose-middleware').initialize(mongoose);
 
 /*
   Retrieve the name, home and features.color of kittehs that live in Seattle,
@@ -67,7 +67,7 @@ require('mongoose-middleware').initialize(mongoose);
   prior to January 1st, 2014. The results should be sorted by birthday in
   descending order and name in ascending order.
 */
-var options = {
+let options = {
   filters : {
     field : ['name', 'home', 'features.color'],
     mandatory : {
@@ -114,7 +114,7 @@ KittehModel
 When using `mongoose-middleware`, the library does not interfere with existing [Mongoose support for Promises](http://mongoosejs.com/docs/promises.html). The [`#page`](#pagination) method will return a native Promise if the `callback` argument is not specified.
 
 ```javascript
-var options = {
+let options = {
   start : 0,
   count : 500
 };
@@ -168,7 +168,7 @@ The options submitted to the `page(options, callback)` middleware method are ech
 The maxDocs property may optionally be specified on initialize to ensure no more than the specified number of documents are ever returned from a query. Please note that this does not affect the ability for the component to return the correct total count of results when using the pagination middleware function.
 
 ```javascript
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
 require('mongoose-middleware').initialize({
   maxDocs : 1000
@@ -180,7 +180,7 @@ require('mongoose-middleware').initialize({
 In order specify specific fields from a document in Mongo to be returned, the fields filter may be used.
 
 ```javascript
-var options = {
+let options = {
   filters : {
     field : ['name', 'home', 'qualities.demeanor']
   }
@@ -219,9 +219,11 @@ The following filters can *ONLY* be used for *mandatory* and *keyword* searches.
 * `equals` - Matches for string value
 * `greaterThan` (or `gt`) - Matches documents where field value is greater than supplied number or Date value in query
 * `greaterThanEqual` (or `gte`) - Matches documents where field value is greater than or equal to supplied number or Date value in query
+* `in` - Matches from a list / Array of values
 * `lessThan` (or `lt`) - Matches documents where field value is less than supplied number or Date value in query
 * `lessThanEqual` (or `lte`) - Matches documents where field value is less than or equal to supplied number or Date value in query
 * `notEqual` (or `ne`) - Matches documents where field value is not equal to the supplied value
+* `notIn` (or `nin`) - Matches documents where field value (as Array) does not contain a matching value
 
 #### Mandatory
 
@@ -232,7 +234,7 @@ Mandatory filters require that the document matches the specified search options
 Optional searches allow you to specify more than one filter that you would like to match results for. This type of search is great for cases where you need to find documents that either match "this" *OR* "that". As an example, image you are searching for cats that are either manx, siamese or tabby, you would configure the filter as follows:
 
 ```javascript
-var options = {
+let options = {
   filters : {
     optional : {
       exact : {
@@ -257,7 +259,7 @@ Keyword searches provide a convenient way to search more than one field with a s
 The following query will search for documents where the name, description or knownAliases contain Heathcliff the Cat. If the name (or description and knownAliases) contains "Cat, the Heathcliff", "the Cat, Heathcliff", "Heathcliff Cat, the" and "the Heathcliff Cat", those results will also be returned.
 
 ```javascript
-var options = {
+let options = {
   filters : {
     keyword : {
       fields : ['name', 'description', 'knownAliases'],
@@ -277,7 +279,7 @@ KittehModel
 If you would like to ensure that matches of "Heathcliff the Cat" in that exact format are returned, simply enclose the term in quotes:
 
 ```javascript
-var options = {
+let options = {
   filters : {
     keyword : {
       fields : ['name', 'description', 'knownAliases'],
@@ -294,7 +296,7 @@ Sorting, at this point, is fairly basic. All descending sorts will be applied pr
 #### Descending
 
 ```javascript
-var options = {
+let options = {
   sort : ['-name', '-description', '-knownAliases']
 };
 
@@ -309,13 +311,13 @@ KittehModel
 You may also specify a single field (not an array) as well as an object for both descending and ascending sorts:
 
 ```javascript
-var options = {
+let options = {
   sort : '-name'
 };
 ```
 
 ```javascript
-var options = {
+let options = {
   sort : {
     'name': -1,
     'description': 1
@@ -326,7 +328,7 @@ var options = {
 #### Ascending
 
 ```javascript
-var options = {
+let options = {
   sort : ['name', 'description', 'knownAliases']
 };
 
@@ -341,7 +343,7 @@ KittehModel
 You may also specify ascending and descending sorts together:
 
 ```javascript
-var options = {
+let options = {
   sort : ['name', '-birthday', '-home']
 };
 ```
@@ -351,7 +353,7 @@ var options = {
 Pagination is performed by swapping the `exec()` function of Mongoose with `page()`. Pagination may be specified as follows:
 
 ```javascript
-var options = {
+let options = {
   start : 0,
   count : 100
 };
@@ -372,7 +374,7 @@ var
 
 require('mongoose-middleware').initialize({ maxDocs : 50 }, mongoose);
 
-var options = {
+let options = {
   start : 0,
   count : 100
 };
@@ -412,7 +414,7 @@ that elements are turned into Arrays when they need to be.
 #### Example
 
 ```javascript
-var base = {
+let base = {
     filters : {
       mandatory : {
         exact : {
