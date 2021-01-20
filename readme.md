@@ -365,10 +365,31 @@ KittehModel
   });
 ```
 
+Pagination relies on the count of documents in a collection in order to return the total. By default, the Mongoose [`estimatedDocumentCount`](https://mongoosejs.com/docs/api.html#model_Model.estimatedDocumentCount) method for performance, but this can be overidden to use ['countDocuments`](https://mongoosejs.com/docs/api.html#model_Model.countDocuments) instead.
+
+```javascript
+const
+  mongoose = require('mongoose'),
+  KittehModel = require('./models/kitteh');
+
+require('mongoose-middleware').initialize({ estimatedDocumentCount : false }, mongoose);
+
+let options = {
+  start : 0,
+  count : 100
+};
+
+KittehModel
+  .find()
+  .page(options, function (err, data) {
+    // data.total will be the result of countDocuments instead of estimatedDocumentCount
+  });
+```
+
 When using pagination, maxDocs may specified via the `initialize()` function of the library which will result in no more than that maximum number of documents being returned.
 
 ```javascript
-var
+const
   mongoose = require('mongoose'),
   KittehModel = require('./models/kitteh');
 

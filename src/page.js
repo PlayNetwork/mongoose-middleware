@@ -1,11 +1,14 @@
 export default (mongoose) => {
 	let
+	estimatedDocumentCount = true,
 		maxDocs = -1,
 		self = {};
 
 	function page (query, options) {
 		return new Promise(function (resolve, reject) {
-			return query.model.countDocuments(query._conditions, function (err, total) {
+			let count = estimatedDocumentCount ? query.model.estimatedDocumentCount : query.model.countDocuments;
+
+			return count(query._conditions, function (err, total) {
 				if (err) {
 					return reject(err);
 				}
@@ -64,7 +67,13 @@ export default (mongoose) => {
 
 	self.initialize = (options) => {
 		if (options) {
-			maxDocs = options.maxDocs || maxDocs;
+			// whether to use estimate or actual count
+			estimatedDocumentCount = (typeof options.estimatedDocumentCount !== 'undefined' ? 
+				options.estimatedDocumentCount : 
+				estimatedDocumentCount); 
+
+			// maximum size of page
+			maxDocs = options.maxDocs || maxDocs; 
 		}
 	};
 

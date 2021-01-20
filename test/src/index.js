@@ -34,6 +34,10 @@ describe('index', () => {
 			countCallback(null, 0);
 		};
 
+		Kitteh.estimatedDocumentCount = (search, countCallback) => {
+			countCallback(null, 0);
+		};
+
 		mongoose.Query.prototype.exec = (findCallback) => {
 			findCallback(null, []);
 		};

@@ -9,6 +9,8 @@ const should = chai.should();
 describe('page', () => {
 	let
 		countError = null,
+		documentCountCall = 0,
+		estimatedDocumentCountCall = 0,
 		execError = null,
 		Kitteh = mongoose.model('kittehs-page', new mongoose.Schema({
 			birthday : {
@@ -32,6 +34,12 @@ describe('page', () => {
 		pageLib(mongoose);
 
 		Kitteh.countDocuments = (search, countCallback) => {
+			documentCountCall ++;
+			countCallback(countError, total);
+		};
+
+		Kitteh.estimatedDocumentCount = (search, countCallback) => {
+			estimatedDocumentCountCall ++;
 			countCallback(countError, total);
 		};
 
@@ -52,6 +60,8 @@ describe('page', () => {
 
 	beforeEach(() => {
 		countError = null;
+		documentCountCall = 0;
+		estimatedDocumentCountCall = 0;
 		execError = null;
 		limit = 0;
 		skip = 0;
@@ -64,6 +74,40 @@ describe('page', () => {
 				should.not.exist(err);
 				data.should.not.be.empty;
 				skip.should.equals(0);
+
+				return done();
+			});
+	});
+
+	it('should use estimatedDocumentCount by default', (done) => {
+		pageLib(mongoose).initialize({ maxDocs : 25 });
+
+		Kitteh
+			.find()
+			.page(null, (err) => {
+				if (err) {
+					return done(err);
+				}
+
+				estimatedDocumentCountCall.should.equal(1);
+				documentCountCall.should.equal(0);
+
+				return done();
+			});
+	});
+
+	it('should use documentCount when specified in initialization', (done) => {
+		pageLib(mongoose).initialize({ estimatedDocumentCount: false });
+
+		Kitteh
+			.find()
+			.page(null, (err) => {
+				if (err) {
+					return done(err);
+				}
+
+				estimatedDocumentCountCall.should.equal(0);
+				documentCountCall.should.equal(1);
 
 				return done();
 			});
