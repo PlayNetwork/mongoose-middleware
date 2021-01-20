@@ -1,7 +1,7 @@
 {
   "name": "@brozeph/mongoose-middleware",
   "description": "Middleware for mongoose that makes filtering, sorting, pagination and projection chainable and simple to apply",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "keywords": [
     "mongo",
     "mongoose",
